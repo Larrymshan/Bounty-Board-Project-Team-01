@@ -1,0 +1,28 @@
+<header>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+      <a class="navbar-brand" href="/"></a>
+      <ul class="navbar-nav mr-auto">
+            {{#if user}}
+            <li class="nav-item">
+              <a class="nav-link" href="/">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/Home">courses</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/Logout">logout</a>
+            </li>
+            {{else}}
+            <li class="nav-item">
+              <a class="nav-link" href="/Login">Login</a>
+            </li>
+            {{/if}}
+          </ul>
+          {{#if user}}
+          <span class="navbar-text">
+            Logged in as {{user.email}}
+          </span>
+          {{/if}}
+        </div>
+      </nav>
