@@ -11,3 +11,4 @@ Team Members:
   Jacob Lehman (github: JacobLehman7842 -  email: jale6271@colorado.edu), 
   Trevor Schmuckley (github: tschmuckley - email: trsc9818@colorado.edu), 
   Jacob Ehl (github: Jacob-Ehl, email: jaeh5902@colorado.edu)
+  Alessandro Cantele (github: alca2205, email: alca2258@colorado.edu)
