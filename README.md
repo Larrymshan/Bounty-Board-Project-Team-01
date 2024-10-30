@@ -5,6 +5,8 @@ Users who want to post bounties can put a price on anything they want done.
 They can choose from pricing by a set price. 
 Users that want to complete bounties can upload a resume and sort through bounties by categories and price.
 
+"To be the one stop solution for all the problems that a person can encounter."
+
 Team Members: 
   Larry Shan (github: LarrymShan - email: lash8147@colorado.edu), 
   Grayson Smillie (github: CanadaDry47 -  email: grsmm4458@colorado.edu), 
