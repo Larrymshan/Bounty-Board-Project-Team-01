@@ -1,0 +1,22 @@
+{{> message}}
+
+
+<h2 class = "text-center">Login</h2>
+<div class = "d-flex justify-content-center">
+    {{!-- this form takes input with id's username and password --}}
+    <form method="POST" action="/login">
+        <div class = "form-group">
+        <label for="email">Email:</label>
+        <input class="form-control" name="username" id = "username" placeholder="username.." required />
+        </div>
+        <div class = "form-group">
+        <label for="password">Password:</label>
+        <input class="form-control" name="password" id = "password" placeholder="password.." required />
+        </div>
+        <div class = "form-group">
+        <button type="submit" class="btn btn-primary">login</button>
+        </div>
+        {{!-- link to register if not logged in --}}
+        <p>Click <a href="/register">here</a> to register</p>
+    </form>
+</div>
