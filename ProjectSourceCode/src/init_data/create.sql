@@ -4,6 +4,7 @@ CREATE TABLE users(
     password CHAR(60) NOT NULL
 );
 
+DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
     review_id SERIAL PRIMARY KEY,
     review_text TEXT NOT NULL,

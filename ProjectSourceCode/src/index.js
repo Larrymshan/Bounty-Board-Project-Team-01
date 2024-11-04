@@ -116,21 +116,21 @@ app.get('/register', (req, res) => {
     
     });
 
-    app.post('/register', async (req, res) => {
-      try {
-        //hash the password using bcrypt library
-        const hash = await bcrypt.hash(req.body.password, 10);
-    
-        // To-DO: Insert username and hashed password into the 'users' table
-        await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
-        res.redirect('/login');
-        //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
-        // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
-      } 
-      catch (error) {
-        res.render('pages/register', { message: 'Registration failed username password already exists', error: true });
-      }
-    });
+app.post('/register', async (req, res) => {
+  try {
+    //hash the password using bcrypt library
+    const hash = await bcrypt.hash(req.body.password, 10);
+
+    // To-DO: Insert username and hashed password into the 'users' table
+    await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
+    res.redirect('/login');
+    //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
+    // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
+  } 
+  catch (error) {
+    res.render('pages/register', { message: 'Registration failed username password already exists', error: true });
+  }
+});
 
 // logout
 
