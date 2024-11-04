@@ -122,7 +122,7 @@ app.get('/register', (req, res) => {
         const hash = await bcrypt.hash(req.body.password, 10);
     
         // To-DO: Insert username and hashed password into the 'users' table
-        await db.one('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
+        await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
         res.redirect('/login');
         //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
         // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
@@ -134,10 +134,8 @@ app.get('/register', (req, res) => {
 
 // logout
 
-app.get("/logout", (req,res) => {
-    req.session.destroy()
-    res.render('pages/logout')
-  });
+
+
 
 //authentification
 const auth = (req, res, next) => {
