@@ -35,7 +35,7 @@ const db = pgp(dbConfig);
 
 db.connect()
   .then(obj => {
-    console.log('Database connection successful'); 
+    console.log('Database connection successful');
     obj.done(); // success, release the connection;
   })
   .catch(error => {
@@ -68,100 +68,99 @@ app.use(
 // API routes
 
 app.get('/', (req, res) => {
-    res.redirect('/login'); 
+  res.redirect('/login');
 });
 
 
 //login routes
 
 app.get('/login', (req, res) => {
-res.render('pages/login')
+  res.render('pages/login')
 
 });
 
 app.post('/login', async (req, res) => {
-      try{
-        const user = await db.one(
-            'SELECT * FROM users WHERE username = $1',
-            [req.body.username]
-        );
-        console.log(user);
-        if(user.username){
-          const match = await bcrypt.compare(req.body.password, user.password);
-          if(!match){
-              res.render('pages/login', {
-                  message: `Incorrect username or password`
-                });
-          }
-          else{
-              req.session.user = user;
-              req.session.save();
-              res.redirect('/home');
-          }
-        }
-        else {
-          res.redirect('/register');
-        }
+  try {
+    const user = await db.one(
+      'SELECT * FROM users WHERE username = $1',
+      [req.body.username]
+    );
+    console.log(user);
+    if (user.username) {
+      const match = await bcrypt.compare(req.body.password, user.password);
+      if (!match) {
+        res.render('pages/login', {
+          message: `Incorrect username or password`
+        });
       }
-      catch(err) {
-        console.log(err)
-        res.redirect('/register');
+      else {
+        req.session.user = user;
+        req.session.save();
+        res.redirect('/home');
       }
+    }
+    else {
+      res.redirect('/register');
+    }
+  }
+  catch (err) {
+    console.log(err)
+    res.redirect('/register');
+  }
 });
 
 // Register routes
 
 app.get('/register', (req, res) => {
-    res.render('pages/register')
-    
-    });
+  res.render('pages/register')
 
-    app.post('/register', async (req, res) => {
-      try {
-        //hash the password using bcrypt library
-        const hash = await bcrypt.hash(req.body.password, 10);
-    
-        // To-DO: Insert username and hashed password into the 'users' table
-        await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
-        res.redirect('/login');
-        //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
-        // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
-      } 
-      catch (error) {
-        res.render('pages/register', { message: 'Registration failed username password already exists', error: true });
-      }
-    });
+});
+
+app.post('/register', async (req, res) => {
+  try {
+    //hash the password using bcrypt library
+    const hash = await bcrypt.hash(req.body.password, 10);
+
+    // To-DO: Insert username and hashed password into the 'users' table
+    await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
+    res.redirect('/login');
+    //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
+    // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
+  }
+  catch (error) {
+    res.render('pages/register', { message: 'Registration failed username password already exists', error: true });
+  }
+});
 
 // logout
 
 //reviews
-const reviews = `
-  SELECT DISTINCT
-    reviews.review_text,
-    reviews.username,
-    reviews.rating
-  FROM
-    reviews`;
 
-app.get("/reviews", (req,res) => {
-    res.render('pages/reviews')
-  });
+app.get("/reviews", (req, res) => {
+
+  res.render('pages/reviews')
+});
+
+app.get("/writeReview", (req, res) => {
+
+  res.render('pages/writeReview')
+});
 
 
 //authentification
 const auth = (req, res, next) => {
-    if (!req.session.user) {
-        // Default to login page.
-        return res.redirect('/login');
-    }
-    next();
-    };
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
 
 // code after this will be required to log in to get to
 app.use(auth);
 
 app.get("/home", (req, res) => {
-    res.render('pages/home')
+  res.render('pages/home')
 });
 
 // start the server

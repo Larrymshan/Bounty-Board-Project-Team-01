@@ -1,0 +1,22 @@
+
+<h1 class="text-center">Reviews</h1>
+<div class="ms-5 me-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Review By</th>
+                <th>Review Comment</th>
+                <th>Review Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each reviews}}
+            <tr>
+                <td>{{ Reviewer }}</td>
+                <td>{{ Texts }}</td>
+                <td>{{ Rating }}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
