@@ -1,8 +1,10 @@
-CREATE TABLE users (
+DROP TABLE IF EXISTS users;
+CREATE TABLE users(
     username VARCHAR(50) PRIMARY KEY,
     password CHAR(60) NOT NULL
 );
 
+DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
     review_id SERIAL PRIMARY KEY,
     review_text TEXT NOT NULL,
