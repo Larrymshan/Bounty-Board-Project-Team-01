@@ -134,7 +134,18 @@ app.get('/register', (req, res) => {
 
 // logout
 
+//reviews
+const reviews = `
+  SELECT DISTINCT
+    reviews.review_text,
+    reviews.username,
+    reviews.rating
+  FROM
+    reviews`;
 
+app.get("/reviews", (req,res) => {
+    res.render('pages/reviews')
+  });
 
 
 //authentification
