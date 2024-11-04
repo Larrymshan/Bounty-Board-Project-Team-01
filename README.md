@@ -1,4 +1,6 @@
-# Bounty-Board-Project
+
+
+N # Bounty-Board-Project
 
 Bounty board is an app where users can post any task from homework help to yard work. 
 Users who want to post bounties can put a price on anything they want done. 
