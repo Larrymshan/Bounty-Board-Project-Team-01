@@ -81,18 +81,18 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
   try {
-    const user = await db.one(
-      'SELECT * FROM users WHERE username = $1',
-      [req.body.username]
-    );
+        const user = await db.one(
+            'SELECT * FROM users WHERE username = $1',
+            [req.body.username]
+        );
     console.log(user);
     if (user.username) {
-      const match = await bcrypt.compare(req.body.password, user.password);
+          const match = await bcrypt.compare(req.body.password, user.password);
       if (!match) {
-        res.render('pages/login', {
-          message: `Incorrect username or password`
-        });
-      }
+              res.render('pages/login', {
+                  message: `Incorrect username or password`
+                });
+          }
       else {
         req.session.user = user;
         req.session.save();
@@ -126,7 +126,7 @@ app.post('/register', async (req, res) => {
     res.redirect('/login');
     //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
     // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
-  }
+  } 
   catch (error) {
     res.render('pages/register', { message: 'Registration failed username password already exists', error: true });
   }
