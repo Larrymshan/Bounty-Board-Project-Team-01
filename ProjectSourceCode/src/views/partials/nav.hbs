@@ -3,33 +3,32 @@
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
       <a class="navbar-brand" href="/"></a>
       <ul class="navbar-nav mr-auto">
-            {{#if user}}
-            <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/Board">board</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/Logout">logout</a>
-            </li>
-            {{else}}
-            <li class="nav-item">
-              <a class="nav-link" href="/Login">login</a>
-            </li>
-            {{/if}}
-          </ul>
-          {{#if user}}
-          <span class="navbar-text">
-            Logged in as {{user.email}}
-          </span>
-          {{/if}}
-                {{!-- search bar --}}
+        {{#if user}}
+        <li class="nav-item">
+          <a class="nav-link" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/Board">board</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/Logout">logout</a>
+        </li>
+        {{else}}
+        <li class="nav-item">
+          <a class="nav-link" href="/Login">login</a>
+        </li>
+        {{/if}}
+      </ul>
+      {{#if user}}
+      <span class="navbar-text">
+        Logged in as {{user.email}}
+      </span>
+      {{/if}}
+      {{!-- search bar --}}
       <form class="search-bar" action="/home" method="GET">
-        <input type="search" name="q" placeholder="Search..." pattern="[A-Za-z0-9\s]{3,}" title="Please enter at least 3 characters (letters or numbers)"
-          required>
+        <input type="search" name="q" placeholder="Search..." pattern="[A-Za-z0-9\s]{3,}"
+          title="Please enter at least 3 characters (letters or numbers)" required>
         <button type="submit">Search</button>
       </form>
-        </div>
-      </nav>
-
+    </div>
+  </nav>
