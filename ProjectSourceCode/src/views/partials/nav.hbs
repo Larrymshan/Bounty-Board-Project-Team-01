@@ -24,5 +24,12 @@
             Logged in as {{user.email}}
           </span>
           {{/if}}
+                {{!-- search bar --}}
+      <form class="search-bar" action="/home" method="GET">
+        <input type="search" name="q" placeholder="Search..." pattern="[A-Za-z0-9\s]{3,}" title="Please enter at least 3 characters (letters or numbers)"
+          required>
+        <button type="submit">Search</button>
+      </form>
         </div>
       </nav>
+
