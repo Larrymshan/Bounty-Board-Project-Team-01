@@ -163,6 +163,34 @@ app.get("/home", (req, res) => {
   res.render('pages/home')
 });
 
+//Write Messages
+app.post("/writeMessage", async (req, res) => {
+  const { reciever_name, title, message_text } = req.body;
+
+  if (message_text.length > 500) {
+    console.log("Message text exceeds 500 characters");
+    return res.status(400).send("Message text should not exceed 500 characters");
+  }
+
+  try {
+    await db.none(
+      'INSERT INTO messages (reciever_name, title, message_text) VALUES ($1, $2, $3)',
+      [reciever_name, title, message_text]
+    );
+
+    res.send("Message written successfully");
+  } catch (error) {
+    if (error.code === '23505') { 
+      res.status(400).send("A message with this title already exists for this receiver");
+    } else {
+      console.error("Error occurred:", error);
+      res.status(500).send("An error occurred");
+    }
+  }
+});
+
+
+
 // start the server
 app.listen(3000);
 console.log('Server is listening on port 3000');
