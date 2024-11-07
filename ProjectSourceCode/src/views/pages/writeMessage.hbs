@@ -1,3 +1,41 @@
 {{>nav}}
 
-<textarea name="message_text" maxlength="500" placeholder="Write your message here (max 500 characters)"></textarea>
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+  <div class="form-container">
+    <h1>Write a Message</h1>
+    <form action="/writeMessage" method="POST">
+      <div class="form-field">
+        <label for="reciever_name">Receiver's Name</label>
+        <input type="text" id="reciever_name" name="reciever_name" required maxlength="50">
+      </div>
+
+      <div class="form-field">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title" required maxlength="50">
+      </div>
+
+      <div class="form-field">
+        <label for="message_text">Message Text</label>
+        <textarea id="message_text" name="message_text" required maxlength="500" placeholder="Write your message here (max 500 characters)"></textarea>
+        <div id="charCount">0/500</div>
+      </div>
+
+      <button type="submit">Send Message</button>
+    </form>
+  </div>
+
+  <script>
+    const messageTextarea = document.getElementById('message_text');
+    const charCount = document.getElementById('charCount');
+
+    messageTextarea.addEventListener('input', () => {
+      const currentLength = messageTextarea.value.length;
+      charCount.textContent = `${currentLength}/500`;
+    });
+  </script>
+
+</body>
+</html>
