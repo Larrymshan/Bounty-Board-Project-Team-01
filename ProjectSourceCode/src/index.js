@@ -108,6 +108,13 @@ app.post('/login', async (req, res) => {
     res.redirect('/register');
   }
 });
+app.use((req, res, next) => {
+  // Make user data globally available in all templates
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+
 
 // Register routes
 
