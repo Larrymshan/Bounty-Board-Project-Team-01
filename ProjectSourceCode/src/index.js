@@ -183,7 +183,7 @@ app.post('/writeReview', (req, res) => {
 
   db.none(query, [reviewText, username, rating, review_by])
     .then(() => {
-      res.redirect('/home');
+      res.redirect('reviewsByMe');
     })
     .catch(error => {
       console.error('Error inserting data:', error);
