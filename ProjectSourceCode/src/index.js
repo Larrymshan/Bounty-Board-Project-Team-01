@@ -139,18 +139,43 @@ app.post('/register', async (req, res) => {
   }
 });
 
-// logout
-
-//reviews
-
-app.get("/reviews", (req, res) => {
-
-  res.render('pages/reviews')
+//get reviews
+app.get('/reviews', (req, res) => {
+  const query = 'SELECT reviewFor, review_text, rating FROM reviews';
+  
+  db.any(query)
+  .then(reviews => {
+    console.log(reviews); //check to see data
+    res.render('pages/reviews', {
+      reviews: reviews
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching reviews:', error);
+    res.status(500).send('An error occurred while fetching reviews.');
+  });
 });
 
+// get writeReview
 app.get("/writeReview", (req, res) => {
-
   res.render('pages/writeReview')
+});
+
+//post writeReview
+app.post('/writeReview', (req, res) => {
+  const username = req.body.username;
+  const reviewText = req.body.reviewText;
+  const rating = req.body.rating;
+  const query = `INSERT INTO reviews (review_text, reviewFor, rating) VALUES ($1, $2, $3)`;
+  
+  db.none(query, [reviewText, username, rating])
+  .then(() => {
+    res.redirect('/reviews');
+  })
+  .catch(error => {
+    console.error('Error inserting data:', error);
+    res.status(500).send('An error occurred while inserting the review.');
+  });
 });
 
 
