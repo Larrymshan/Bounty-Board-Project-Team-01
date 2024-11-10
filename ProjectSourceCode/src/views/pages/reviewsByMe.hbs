@@ -1,10 +1,9 @@
 <h1 class="text-center">Reviews</h1>
-<a class="nav-link" href="/reviewsByMe">Review by you</a>
 <div class="ms-5 me-5">
     <table class="table">
         <thead>
             <tr>
-                <th>Review By</th>
+                <th>You reviewed</th>
                 <th>Review Comment</th>
                 <th>Review Score</th>
             </tr>
@@ -12,9 +11,9 @@
         <tbody>
             {{#each reviews}}
             <tr>
-                <td>{{review_by}}</td> 
+                <td>{{user_reviewed}}</td>  
                 <td>{{review_text}}</td>  
-                <td>{{rating}}</td>       
+                <td>{{rating}}</td>      
             </tr>
             {{/each}}
         </tbody>
