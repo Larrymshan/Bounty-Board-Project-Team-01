@@ -141,42 +141,56 @@ app.post('/register', async (req, res) => {
 
 //get reviews
 app.get('/reviews', (req, res) => {
-  const query = 'SELECT reviewFor, review_text, rating FROM reviews';
+  if (!req.session.user) {
+    console.log('User not logged in to view reviews');
+    return res.redirect('/login');  
+  }
+
+  const current = req.session.user.username;  
+
+  const query = 'SELECT review_text, rating, review_by FROM reviews WHERE user_reviewed = $1';
   
-  db.any(query)
-  .then(reviews => {
-    console.log(reviews); //check to see data
-    res.render('pages/reviews', {
-      reviews: reviews
+  db.any(query, [current])
+    .then(reviews => {
+      console.log(reviews); // Check to see data
+      res.render('pages/reviews', {
+        reviews: reviews
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching reviews:', error);
+      res.status(500).send('An error occurred while fetching reviews.');
     });
-  })
-  .catch(error => {
-    console.error('Error fetching reviews:', error);
-    res.status(500).send('An error occurred while fetching reviews.');
-  });
 });
 
-// get writeReview
-app.get("/writeReview", (req, res) => {
+app.get('/writeReview', (req, res) => {
   res.render('pages/writeReview')
+
 });
 
-//post writeReview
+// post writeReview
 app.post('/writeReview', (req, res) => {
+  if (!req.session.user) {
+    console.log('User not logged in cannot write review');
+    return res.redirect('/login');
+  }
+
   const username = req.body.username;
   const reviewText = req.body.reviewText;
   const rating = req.body.rating;
-  const query = `INSERT INTO reviews (review_text, reviewFor, rating) VALUES ($1, $2, $3)`;
-  
-  db.none(query, [reviewText, username, rating])
-  .then(() => {
-    res.redirect('/reviews');
-  })
-  .catch(error => {
-    console.error('Error inserting data:', error);
-    res.status(500).send('An error occurred while inserting the review.');
-  });
+  const review_by = req.session.user.username;
+  const query = `INSERT INTO reviews (review_text, user_reviewed, rating, review_by) VALUES ($1, $2, $3, $4)`;
+
+  db.none(query, [reviewText, username, rating, review_by])
+    .then(() => {
+      res.redirect('/home');
+    })
+    .catch(error => {
+      console.error('Error inserting data:', error);
+      res.status(500).send('An error occurred while inserting the review.');
+    });
 });
+
 
 
 //authentification

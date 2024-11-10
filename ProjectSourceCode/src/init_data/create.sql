@@ -7,11 +7,9 @@ CREATE TABLE users (
 CREATE TABLE reviews (
     review_id SERIAL PRIMARY KEY,
     review_text TEXT NOT NULL,
-    -- reviewer_id INT NOT NULL,
-    reviewer_name INT NOT NULL,
+    review_by INT NOT NULL,
     rating INT NOT NULL,
-    -- need to add user_id column for users table
-    -- FOREIGN KEY (reviewer_id) REFERENCES users(user_id),
+    user_reviewed TEXT NOT NULL
 );
    
 CREATE TABLE messages (

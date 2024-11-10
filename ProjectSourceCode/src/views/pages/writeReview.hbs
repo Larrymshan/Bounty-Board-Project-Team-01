@@ -1,11 +1,11 @@
 <form method="POST" action="/writeReview">
   <div class="mb-3">
     <label for="username" class="form-label">Who would you like to review?</label>
-    <input type="text" class="form-control" id="username">
+    <input type="text" class="form-control" id="username" name="username" required>
   </div>
   <div class="mb-3">
     <label for="rating" class="form-label">Please choose a rating</label>
-    <select id="number" name="number">
+    <select id="rating" name="rating" class="form-control" required>
       <option value="1">1</option>
       <option value="2">2</option>
       <option value="3">3</option>
@@ -20,7 +20,7 @@
   </div>
   <div class="mb-3">
     <label for="reviewText" class="form-label">Please type review here</label>
-    <input type="text" class="form-control" id="reviewText">
+    <input type="text" class="form-control" id="reviewText" name="reviewText" required>
   </div>
   <button type="submit" class="btn btn-primary">Submit Review</button>
 </form>
