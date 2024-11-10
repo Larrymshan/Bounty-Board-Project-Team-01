@@ -13,7 +13,7 @@ CREATE TABLE reviews (
     -- need to add user_id column for users table
     -- FOREIGN KEY (reviewer_id) REFERENCES users(user_id),
 );
-
+   
 CREATE TABLE messages (
     reciever_name VARCHAR(50),
     title VARCHAR(50),
