@@ -191,6 +191,28 @@ app.post('/writeReview', (req, res) => {
     });
 });
 
+app.get('/reviewsByMe', (req, res) => {
+  if (!req.session.user) {
+    console.log('User not logged in to view reviews');
+    return res.redirect('/login');  
+  }
+
+  const current = req.session.user.username;  
+
+  const query = 'SELECT review_text, rating, user_reviewed FROM reviews WHERE review_by = $1';
+  
+  db.any(query, [current])
+    .then(reviews => {
+      console.log(reviews); // Check to see data
+      res.render('pages/reviewsByMe', {
+        reviews: reviews
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching reviews:', error);
+      res.status(500).send('An error occurred while fetching reviews.');
+    });
+});
 
 
 //authentification
