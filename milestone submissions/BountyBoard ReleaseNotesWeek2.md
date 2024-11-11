@@ -21,6 +21,11 @@ bounty poster is now able to review this user. The poster simply needs
 to click the "Write a review" tab on the nav bar and fill out the review
 form. This response will then be saved into our secure database.
 
+Write Messages:
+
+This release coomes with a limited capability to send messages. The full 
+functionality will be implemented in future versions.
+
 View reviews:
 
 We have also introduced a way for users to view reviews they have
