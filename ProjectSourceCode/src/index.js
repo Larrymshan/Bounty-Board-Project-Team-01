@@ -84,7 +84,6 @@ app.post('/login', async (req, res) => {
             'SELECT * FROM users WHERE username = $1',
             [req.body.username]
         );
-    console.log(user);
     if (user.username) {
           const match = await bcrypt.compare(req.body.password, user.password);
       if (!match) {
