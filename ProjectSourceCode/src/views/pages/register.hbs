@@ -2,20 +2,35 @@
 
 <h2 class = "text-center">Register</h2>
 <div class = "d-flex justify-content-center">
-    {{!-- this form takes input with id's username and password --}}
-    <form method="POST" action="/register">
-        <div class = "form-group">
-        <label for="email">Username:</label>
-        <input class="form-control" name="username" id = "username" placeholder="username.." required />
-        </div>
-        <div class = "form-group">
+    {{!-- verify correct fields are inputted for email: --}}
+<form method="POST" action="/register">
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input
+            class="form-control"
+            type="email"
+            name="username"
+            id="username"
+            placeholder="username@example.com"
+            required
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+            title="Please enter a valid email address"
+        />
+    </div>
+    <div class="form-group">
         <label for="password">Password:</label>
-        <input class="form-control" name="password" id = "password" placeholder="password.." required />
-        </div>
-        <div class = "form-group">
-        <button type="submit" class="btn btn-primary">register</button>
-        </div>
-        {{!-- link to login if already registered --}}
-        <p>Click <a href="/login">here</a> to login</p>
-    </form>
+        <input
+            class="form-control"
+            type="password"
+            name="password"
+            id="password"
+            placeholder="password.."
+            required
+        />
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+    <p>Click <a href="/login">here</a> to login</p>
+</form>
 </div>
