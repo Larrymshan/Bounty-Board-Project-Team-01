@@ -5,7 +5,12 @@ CREATE TABLE users (
     password CHAR(60) NOT NULL
 );
 CREATE TABLE profiles(
-    profile_id SERIAL PRIMARY KEY;
+    profile_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(60),
+    last_name VARCHAR(60),
+    profile_bio TEXT,
+    profile_picture_url TEXT
+    -- should add a history of things done or resume?
     -- I will figure out what intails profile tommorow
 );
 CREATE TABLE profile_to_id(
