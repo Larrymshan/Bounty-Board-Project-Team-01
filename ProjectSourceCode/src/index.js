@@ -124,10 +124,21 @@ app.get('/register', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  const userQuery = "SELECT * FROM users WHERE username = $1";
+
   try {
+    
     if(req.body.password == '' || req.body.username == ''){
       throw new Error("Invalid username or password.");
     }
+
+    const q = await db.oneOrNone(userQuery,[req.body.username]);
+    
+    console.log(q);
+    if (q) {
+      throw  new Error("User already exists");
+    }
+
     //hash the password using bcrypt library
     const hash = await bcrypt.hash(req.body.password, 10);
 
