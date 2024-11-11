@@ -71,7 +71,6 @@ app.get('/', (req, res) => {
   res.redirect('/login');
 });
 
-
 //login routes
 
 app.get('/login', (req, res) => {
@@ -114,8 +113,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 // Register routes
 
 app.get('/register', (req, res) => {
@@ -154,6 +151,31 @@ app.post('/register', async (req, res) => {
     
   }
 });
+
+
+//Logout Route
+//-----------------------
+app.get("/logout", (req,res) => {
+  req.session.destroy()
+  res.render('pages/logout')
+});
+//-----------------------
+
+//authentification
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+// code after this will be required to log in to get to
+app.use(auth);
+//**********************************************************
+//**********************************************************
+//**********************************************************
+
 
 //get reviews
 app.get('/reviews', (req, res) => {
@@ -230,25 +252,13 @@ app.get('/reviewsByMe', (req, res) => {
     });
 });
 
-
-//authentification
-const auth = (req, res, next) => {
-  if (!req.session.user) {
-    // Default to login page.
-    return res.redirect('/login');
-  }
-  next();
-};
-
-
-
 //-----------------------
 app.get('/welcome', (req, res) => {
   res.json({status: 'success', message: 'Welcome!'});
 });
 //-----------------------
-// code after this will be required to log in to get to
-app.use(auth);
+
+
 
 app.get("/home", (req, res) => {
   res.render('pages/home')
