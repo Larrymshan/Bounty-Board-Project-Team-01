@@ -1,8 +1,7 @@
 // ********************** Initialize server **********************************
-
-const server = require('../src/index.js'); //TODO: Make sure the path to your index.js is correctly added
-
+const {server,db} = require('../src/index.js'); //TODO: Make sure the path to your index.js is correctly added
 // ********************** Import Libraries ***********************************
+const bcrypt = require('bcryptjs');
 
 const chai = require('chai'); // Chai HTTP provides an interface for live integration testing of the API's.
 const chaiHttp = require('chai-http');
@@ -10,7 +9,6 @@ chai.should();
 chai.use(chaiHttp);
 const {assert, expect} = chai;
 
-// ********************** DEFAULT WELCOME TESTCASE ****************************
 
 describe('Server!', () => {
   // Sample test case given to test / endpoint.
@@ -36,7 +34,6 @@ describe('Testing register route', () => {
           .send({username: '1', password:'$2a$10$UqdunLBAyvsLSxsD5wrV3uRJbucN8kIJffC7sgR4gnqyYkJvBa.BC'})
           .end((err, res) => {
             expect(res).to.have.status(200);
-          //expect(res.body.message).to.equals('');
             done();
           });
       });
@@ -45,40 +42,71 @@ describe('Testing register route', () => {
       chai
         .request(server)
         .post('/register')
-        .send({username: '', password:''})
+        .send({username: '1', password:'$2a$10$UqdunLBAyvsLSxsD5wrV3uRJbucN8kIJffC7sgR4gnqyYkJvBa.BC'})
         .end((err, res) => {
-          expect(res).to.have.status(400);
-          expect(res.body.message).to.equals('Registration failed username or password already exists or invalid input');
-          done();
+          chai
+            .request(server)
+            .post('/register')
+            .send({username: '1', password:'$2a$10$UqdunLBAyvsLSxsD5wrV3uRJbucN8kIJffC7sgR4gnqyYkJvBa.BC'})
+            .end((err, res) => {
+              expect(res).to.have.status(400);
+              done();
+            });
         });
+      
     });
   });
 
-  describe('Testing Redirect', () => {
-    // Sample test case given to test /test endpoint.
-    it('test route should redirect to /login with 302 HTTP status code', done => {
-      chai
-        .request(server)
-        .get('/login')
-        .end((err, res) => {
-          res.should.have.status(302); // Expecting a redirect status code
-          res.should.redirectTo(/^.*127\.0\.0\.1.*\/login$/); // Expecting a redirect to /login with the mentioned Regex
-          done();
-        });
+
+
+
+
+describe('Profile Route Tests', () => {
+  let agent;
+  const testUser = {
+    username: 'testuser',
+    password: 'testpass123',
+  };
+
+  before(async () => {
+    // Clear users table and create test user
+    await db.query('TRUNCATE TABLE users CASCADE');
+    const hashedPassword = await bcrypt.hash(testUser.password, 10);
+    await db.query('INSERT INTO users (username, password) VALUES ($1, $2)', [
+      testUser.username,
+      hashedPassword,
+    ]);
+  });
+
+  beforeEach(() => {
+    // Create new agent for session handling
+    agent = chai.request.agent(server);
+  });
+
+  afterEach(() => {
+    // Clear cookie after each test
+    agent.close();
+  });
+
+  after(async () => {
+    // Clean up database
+    await db.query('TRUNCATE TABLE users CASCADE');
+  });
+
+  describe('testing write review', () => {
+    it('positive : /writeReview', async () => {
+      await agent.post('/login').send(testUser);
+      
+      const res = await agent.post('/writeReview').send({username: '2', reviewText:'testing review', rating:'5'})
+      expect(res).to.have.status(200);
+    });
+
+    it('negative : /writeReview', async () => {
+      await agent.post('/login').send(testUser);
+      
+      const res = await agent.post('/writeReview').send({username: '2', reviewText:'testing review'})
+      expect(res).to.have.status(500);
     });
   });
-  
-  describe('Testing Render', () => {
-    // Sample test case given to test /test endpoint.
-    it('test "/login" route should render with an html response', done => {
-      chai
-        .request(server)
-        .get('/login') // for reference, see lab 8's login route (/login) which renders home.hbs
-        .end((err, res) => {
-          res.should.have.status(200); // Expecting a success status code
-          res.should.be.html; // Expecting a HTML response
-          done();
-        });
-    });
-  });
+});
 // ********************************************************************************

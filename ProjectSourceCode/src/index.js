@@ -84,7 +84,6 @@ app.post('/login', async (req, res) => {
             'SELECT * FROM users WHERE username = $1',
             [req.body.username]
         );
-    console.log(user);
     if (user.username) {
           const match = await bcrypt.compare(req.body.password, user.password);
       if (!match) {
@@ -93,6 +92,7 @@ app.post('/login', async (req, res) => {
                 });
           }
       else {
+        console.log('LOGGED IN')
         req.session.user = user;
         req.session.save();
         res.redirect('/home');
@@ -139,10 +139,9 @@ app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
     const hash = await bcrypt.hash(req.body.password, 10);
 
-    // To-DO: Insert username and hashed password into the 'users' table
     await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
     
-    res.status(200).redirect('/login');
+    res.redirect('/login');
     //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
     // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
   } 
@@ -161,7 +160,15 @@ app.get("/logout", (req,res) => {
 });
 //-----------------------
 
-//authentification
+//test route
+//-----------------------
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
+//-----------------------
+
+
+// authentification
 const auth = (req, res, next) => {
   if (!req.session.user) {
     // Default to login page.
@@ -170,7 +177,8 @@ const auth = (req, res, next) => {
   next();
 };
 
-// code after this will be required to log in to get to
+// // code after this will be required to log in to get to
+// Authentication Required
 app.use(auth);
 //**********************************************************
 //**********************************************************
@@ -208,20 +216,17 @@ app.get('/writeReview', (req, res) => {
 
 // post writeReview
 app.post('/writeReview', (req, res) => {
-  if (!req.session.user) {
-    console.log('User not logged in cannot write review');
-    return res.redirect('/login');
-  }
 
   const username = req.body.username;
   const reviewText = req.body.reviewText;
   const rating = req.body.rating;
   const review_by = req.session.user.username;
-  const query = `INSERT INTO reviews (review_text, user_reviewed, rating, review_by) VALUES ($1, $2, $3, $4)`;
+ 
+  const query = `INSERT INTO reviews (review_text, user_reviewed, rating, reviewer_name) VALUES ($1, $2, $3, $4)`;
 
   db.none(query, [reviewText, username, rating, review_by])
     .then(() => {
-      res.redirect('reviewsByMe');
+      res.redirect(200,'reviewsByMe');
     })
     .catch(error => {
       console.error('Error inserting data:', error);
@@ -251,15 +256,6 @@ app.get('/reviewsByMe', (req, res) => {
       res.status(500).send('An error occurred while fetching reviews.');
     });
 });
-
-//-----------------------
-app.get('/welcome', (req, res) => {
-  res.json({status: 'success', message: 'Welcome!'});
-});
-//-----------------------
-
-
-
 app.get("/home", (req, res) => {
   res.render('pages/home')
 });
@@ -293,5 +289,6 @@ app.post("/writeMessage", async (req, res) => {
 
 
 // start the server
-module.exports = app.listen(3000);
+const server = app.listen(3000);
+module.exports = {server, db}
 console.log('Server is listening on port 3000');

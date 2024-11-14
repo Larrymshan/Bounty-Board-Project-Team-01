@@ -10,7 +10,7 @@ CREATE TABLE reviews (
     review_id SERIAL PRIMARY KEY,
     review_text TEXT NOT NULL,
     -- reviewer_id INT NOT NULL,
-    reviewer_name INT NOT NULL,
+    reviewer_name VARCHAR(50) NOT NULL,
     rating INT NOT NULL,
     user_reviewed TEXT NOT NULL
 );
