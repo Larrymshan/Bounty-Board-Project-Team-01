@@ -262,28 +262,64 @@ app.get("/home", (req, res) => {
 
 //Write Messages
 app.post("/writeMessage", async (req, res) => {
-  const { reciever_name, title, message_text } = req.body;
-
-  if (message_text.length > 500) {
-    console.log("Message text exceeds 500 characters");
-    return res.status(400).send("Message text should not exceed 500 characters");
+  const sender_name = req.session.username;
+  const {reciever_name, title, message_text} = req.body;
+  if (!reciever_name || reciever_name.length > 50) {
+    return res.status(400).json({ error: "Receiver name is required and should not exceed 50 characters." });
+  }
+  if (!title || title.length > 50) {
+    return res.status(400).json({ error: "Title is required and should not exceed 50 characters." });
+  }
+  if (!message_text || message_text.length > 500) {
+    return res.status(400).json({ error: "Message text should not exceed 500 characters." });
   }
 
   try {
     await db.none(
-      'INSERT INTO messages (reciever_name, title, message_text) VALUES ($1, $2, $3)',
-      [reciever_name, title, message_text]
+      'INSERT INTO messages (reciever_name, sender_name, title, message_text) VALUES ($1, $2, $3, $4)',
+      [reciever_name, sender_name, title, message_text]
     );
 
-    res.send("Message written successfully");
+    res.status(201).json({ message: "Message written successfully" });
   } catch (error) {
     if (error.code === '23505') { 
-      res.status(400).send("A message with this title already exists for this receiver");
+      res.status(400).json({ error: "A message with this title already exists for this receiver" });
     } else {
       console.error("Error occurred:", error);
-      res.status(500).send("An error occurred");
+      res.status(500).json({ error: "An internal server error occurred" });
     }
   }
+});
+
+//message page
+app.get("/message_page", async (req, res) => {
+  const{username} = req.session.username;
+
+  if (!req.session.user) {
+    console.log('User not logged in to view messages');
+    return res.redirect('/login');  
+  }
+
+  try{
+    const recievedMessages = await db.any(
+      'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE reciever_name = $1',
+      [username]
+    );
+    const sentMessages = await db.any(
+      'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE sender_name = $1',
+      [username]
+    );
+    res.render("message_page", {
+      username,
+      recievedMessages,
+      sentMessages
+    });
+
+  }catch(error){
+    console.error("Error fetching messages:", error);
+    res.status(500).json({ error: "An internal server error occurred" });
+  }
+
 });
 
 
