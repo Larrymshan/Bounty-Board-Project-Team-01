@@ -194,7 +194,7 @@ app.get('/reviews', (req, res) => {
 
   const current = req.session.user.username;  
 
-  const query = 'SELECT review_text, rating, review_by FROM reviews WHERE user_reviewed = $1';
+  const query = 'SELECT review_text, rating, reviewer_name FROM reviews WHERE user_reviewed = $1';
   
   db.any(query, [current])
     .then(reviews => {
@@ -226,7 +226,7 @@ app.post('/writeReview', (req, res) => {
 
   db.none(query, [reviewText, username, rating, review_by])
     .then(() => {
-      res.redirect(200,'reviewsByMe');
+      res.redirect('reviewsByMe');
     })
     .catch(error => {
       console.error('Error inserting data:', error);
@@ -242,7 +242,7 @@ app.get('/reviewsByMe', (req, res) => {
 
   const current = req.session.user.username;  
 
-  const query = 'SELECT review_text, rating, user_reviewed FROM reviews WHERE review_by = $1';
+  const query = 'SELECT review_text, rating, user_reviewed FROM reviews WHERE reviewer_name = $1';
   
   db.any(query, [current])
     .then(reviews => {
