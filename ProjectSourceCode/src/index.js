@@ -194,7 +194,7 @@ app.get('/reviews', (req, res) => {
 
   const current = req.session.user.username;  
 
-  const query = 'SELECT review_text, rating, review_by FROM reviews WHERE user_reviewed = $1';
+  const query = 'SELECT review_text, rating, reviewer_name FROM reviews WHERE user_reviewed = $1';
   
   db.any(query, [current])
     .then(reviews => {
