@@ -224,9 +224,9 @@ app.post('/report', (req, res) => {
     .then(() => {
       const current = req.session.user.username;
 
-      const query = 'SELECT review_text, rating, reviewer_name, review_id FROM reviews WHERE user_reviewed = $1';
+      const query1 = 'SELECT review_text, rating, reviewer_name, review_id FROM reviews WHERE user_reviewed = $1 ORDER BY review_id';
 
-      db.any(query, [current])
+      db.any(query1, [current])
         .then(reviews => {
           console.log(reviews); // Check to see data
           res.render('pages/reviews', {
