@@ -15,7 +15,13 @@
                 <td>{{reviewer_name}}</td> 
                 <td>{{review_text}}</td>  
                 <td>{{rating}}</td>   
-                <td><button type="submit" class="btn btn-outline-danger">Report</button></td>
+                <td>
+                    <form method="POST" action="/report">
+
+                        <input type="hidden" name="review_id" value={{review_id}}>
+                        <button type="submit" class="btn btn-outline-danger">Report</button>
+                    </form>
+                </td>
             </tr>
             {{/each}}
         </tbody>
