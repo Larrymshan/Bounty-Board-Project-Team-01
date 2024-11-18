@@ -130,8 +130,6 @@ app.post('/register', async (req, res) => {
     }
 
     const q = await db.oneOrNone(userQuery,[req.body.username]);
-    
-    console.log(q);
     if (q) {
       throw  new Error("User already exists");
     }
@@ -140,13 +138,37 @@ app.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
 
     await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
-    
-    res.redirect('/login');
+
+    res.redirect('/createProfile?userName=${req.body.username}');
     //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
     // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
   } 
   catch (error) {
     res.status(400).render('pages/register', { message: 'Registration failed username or password already exists or invalid input', error: true });
+    
+  }
+});
+app.get('/createProfile', (req, res) => {
+  res.render('pages/createProfile')
+});
+
+app.post('/createProfile', async (req, res) => {
+  const username = req.query.userName;
+  const userQuery = "SELECT * FROM users u, profiles p WHERE u.username = $1 AND u.userid = p.userid";
+
+  try {
+    const q3 = await db.oneOrNone(userQuery,[user]);
+    
+    if (q3) {
+      throw  new Error("User already exists");
+    }
+
+    await db.none('INSERT INTO profiles(userid, first_name, last_name, profile_bio, profile_picture_url) VALUES($1, $2, $3, $4 $5)', [q3.userid, req.body.first_name, req.body.last_name, req.body.profile_bio, req.body.profile_picture_url]);
+    
+    res.redirect('/login');
+  } 
+  catch (error) {
+    res.status(400).render('pages/createProfile', { message: 'creation failed something went wrong', error: true });
     
   }
 });
@@ -284,6 +306,12 @@ app.post("/writeMessage", async (req, res) => {
       res.status(500).send("An error occurred");
     }
   }
+});
+
+app.get("/profile", async (req,res) =>{
+  const q = "SELECT * FROM profiles p, users u WHERE p.profile_id = u.profile_id";
+  const profileData = await db.any(q);
+  res.render('/profile', { profile: profileData[0] });
 });
 
 
