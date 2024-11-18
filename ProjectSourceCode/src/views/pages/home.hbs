@@ -1,4 +1,18 @@
 <div class="container">
   <h1>Welcome to the Home Page</h1>
   <p>Here you can create a new post by clicking the button in the navigation bar.</p>
+
+
+
+  <section id="bountyFeed">
+        <h2>Active Bounties</h2>
+        {{#each bounties}}
+        <div class="bounty-item">
+            <h3>{{itemName}}</h3>
+            <p><strong>Price:</strong> ${{price}}</p>
+            <p><strong>Posted By:</strong> User {{userId}}</p>
+            <p><strong>Posted At:</strong> {{createdAt}}</p>
+        </div>
+        {{/each}}
+    </section>
 </div>

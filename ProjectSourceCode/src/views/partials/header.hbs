@@ -2,23 +2,24 @@
   {{>title}}
 
   {{#if user}}
-    {{> nav }} <!-- Display the navigation bar only if the user is logged in -->
-    {{else}}
-    <span class="navbar-text">
-      <a href="/login">Login</a> or <a href="/register">Register</a>
-    </span>
+  {{> nav }} <!-- Display the navigation bar only if the user is logged in -->
+  {{else}}
+  <span class="navbar-text">
+    <a href="/login">Login</a> or <a href="/register">Register</a>
+  </span>
   {{/if}}
-  
 
-    <div id="postPriceFormContainer" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, 0); background-color: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
+
+  <div id="postPriceFormContainer"
+    style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, 0); background-color: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
     <h2>Make a New Post</h2>
-    <form id="postPriceForm">
+    <form id="postPriceForm" action="">
       <label for="itemName">Item Name:</label>
       <input type="text" id="itemName" name="itemName" required>
-      
+
       <label for="price">Price ($):</label>
       <input type="number" id="price" name="price" required>
-      
+
       <button type="submit">Submit</button>
       <button type="button" id="closePostFormButton">Close</button>
     </form>
@@ -36,9 +37,41 @@
           postPriceFormContainer.style.display = 'block'; // Show the form
         });
 
+
         closePostFormButton.addEventListener('click', function () {
           postPriceFormContainer.style.display = 'none'; // Hide the form
         });
+
+        postPriceForm.addEventListener('submit', async function (event) {
+          event.preventDefault();
+
+          const itemName = document.getElementById('itemName').value;
+          const price = document.getElementById('price').value;
+          const userid = 1; // Replace with the actual logged-in user's ID (e.g., from a session or token)
+
+          try {
+            const response = await fetch('/createPost', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ userid, itemName, price }), // Include userId
+            });
+
+            if (response.ok) {
+              alert('Post created successfully!');
+              postPriceFormContainer.style.display = 'none';
+              postPriceForm.reset();
+            } else {
+              alert('Error creating post.');
+            }
+          } catch (error) {
+            console.error('Error:', error);
+            alert('Error creating post.');
+          }
+        });
+
+
       } else {
         console.error('Button or form container not found.');
       }

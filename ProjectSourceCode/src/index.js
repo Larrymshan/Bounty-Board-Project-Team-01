@@ -177,6 +177,7 @@ const auth = (req, res, next) => {
   next();
 };
 
+
 // // code after this will be required to log in to get to
 // Authentication Required
 app.use(auth);
@@ -213,6 +214,35 @@ app.get('/writeReview', (req, res) => {
   res.render('pages/writeReview')
 
 });
+
+// post Bounty
+
+app.post('/createPost', (req, res) => {
+  
+  const { y, itemName, price } = req.body; // Ensure userId is 
+  const userid = "ale";
+
+  // Debug: Check incoming data
+  console.log('Incoming data:', { userid, itemName, price });
+
+  if (!userid || !itemName || !price) {
+      return res.status(400).send('User ID, Item Name, and Price are required.');
+  }
+  const query = 'INSERT INTO bounty (userId, itemName, price) VALUES ($1, $2, $3)';
+  db.query(query, [userid, itemName, price], (err, result) => {
+      if (err) {
+          console.error('Database Error:', err);
+          return res.status(500).send('Error saving bounty.');
+      }
+      res.status(201).send('Bounty created successfully.');
+  });
+});
+
+// get bounty 
+
+
+
+
 
 // post writeReview
 app.post('/writeReview', (req, res) => {

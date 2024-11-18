@@ -21,3 +21,12 @@ CREATE TABLE messages (
     message_text TEXT NOT NULL,
     PRIMARY KEY (reciever_name, title)
 );
+
+
+DROP TABLE IF EXISTS bounty;
+CREATE TABLE bounty (
+    userid SERIAL PRIMARY KEY,
+    itemName VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+);
