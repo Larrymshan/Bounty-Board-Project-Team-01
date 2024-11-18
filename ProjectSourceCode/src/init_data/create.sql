@@ -17,6 +17,7 @@ CREATE TABLE reviews (
    
 CREATE TABLE messages (
     reciever_name VARCHAR(50),
+    sender_name VARCHAR(50),
     title VARCHAR(50),
     message_text TEXT NOT NULL,
     PRIMARY KEY (reciever_name, title)

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Messages</title>
+  </head>
+  <body>
+    <h1>Messages for {{username}}</h1>
+
+    <h2>Received Messages</h2>
+    {{#if receivedMessages}}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>From</th>
+            <th>Title</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each receivedMessages}}
+          <tr>
+            <td>{{sender_name}}</td>
+            <td>{{title}}</td>
+            <td>{{message_text}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <p>No Received Messages</p>
+    {{/if}}
+
+    <h2>Sent Messages</h2>
+    {{#if sentMessages}}
+      <table class="table">
+        <thead>
+          <tr>
+            <th>To</th>
+            <th>Title</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each sentMessages}}
+          <tr>
+            <td>{{receiver_name}}</td>
+            <td>{{title}}</td>
+            <td>{{message_text}}</td>
+          </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <p>No Sent Messages</p>
+    {{/if}}
+  </body>
+</html>
