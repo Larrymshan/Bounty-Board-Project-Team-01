@@ -80,17 +80,17 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
   try {
-        const user = await db.one(
-            'SELECT * FROM users WHERE username = $1',
-            [req.body.username]
-        );
+    const user = await db.one(
+      'SELECT * FROM users WHERE username = $1',
+      [req.body.username]
+    );
     if (user.username) {
-          const match = await bcrypt.compare(req.body.password, user.password);
+      const match = await bcrypt.compare(req.body.password, user.password);
       if (!match) {
-              res.render('pages/login', {
-                  message: `Incorrect username or password`
-                });
-          }
+        res.render('pages/login', {
+          message: `Incorrect username or password`
+        });
+      }
       else {
         console.log('LOGGED IN')
         req.session.user = user;
@@ -124,37 +124,37 @@ app.post('/register', async (req, res) => {
   const userQuery = "SELECT * FROM users WHERE username = $1";
 
   try {
-    
-    if(req.body.password == '' || req.body.username == ''){
+
+    if (req.body.password == '' || req.body.username == '') {
       throw new Error("Invalid username or password.");
     }
 
-    const q = await db.oneOrNone(userQuery,[req.body.username]);
-    
+    const q = await db.oneOrNone(userQuery, [req.body.username]);
+
     console.log(q);
     if (q) {
-      throw  new Error("User already exists");
+      throw new Error("User already exists");
     }
 
     //hash the password using bcrypt library
     const hash = await bcrypt.hash(req.body.password, 10);
 
     await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
-    
+
     res.redirect('/login');
     //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
     // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
-  } 
+  }
   catch (error) {
     res.status(400).render('pages/register', { message: 'Registration failed username or password already exists or invalid input', error: true });
-    
+
   }
 });
 
 
 //Logout Route
 //-----------------------
-app.get("/logout", (req,res) => {
+app.get("/logout", (req, res) => {
   req.session.destroy()
   res.render('pages/logout')
 });
@@ -163,7 +163,7 @@ app.get("/logout", (req,res) => {
 //test route
 //-----------------------
 app.get('/welcome', (req, res) => {
-  res.json({status: 'success', message: 'Welcome!'});
+  res.json({ status: 'success', message: 'Welcome!' });
 });
 //-----------------------
 
@@ -189,13 +189,13 @@ app.use(auth);
 app.get('/reviews', (req, res) => {
   if (!req.session.user) {
     console.log('User not logged in to view reviews');
-    return res.redirect('/login');  
+    return res.redirect('/login');
   }
 
-  const current = req.session.user.username;  
+  const current = req.session.user.username;
 
-  const query = 'SELECT review_text, rating, reviewer_name FROM reviews WHERE user_reviewed = $1';
-  
+  const query = 'SELECT review_text, rating, reviewer_name, review_id FROM reviews WHERE user_reviewed = $1';
+
   db.any(query, [current])
     .then(reviews => {
       console.log(reviews); // Check to see data
@@ -214,6 +214,34 @@ app.get('/writeReview', (req, res) => {
 
 });
 
+app.post('/report', (req, res) => {
+  const review_id = req.body.review_id;
+  console.log('Received request body:', req.body);
+
+  const query = 'UPDATE reviews SET flagged = TRUE WHERE review_id = $1';
+
+  db.none(query, [review_id])
+    .then(() => {
+      const current = req.session.user.username;
+
+      const query = 'SELECT review_text, rating, reviewer_name, review_id FROM reviews WHERE user_reviewed = $1';
+
+      db.any(query, [current])
+        .then(reviews => {
+          console.log(reviews); // Check to see data
+          res.render('pages/reviews', {
+            reviews: reviews
+          });
+        })
+
+    })
+    .catch(error => {
+      console.error('Error updating the review:', error);
+      res.status(500).send('An error occurred while updating the review.');
+    });
+});
+
+
 // post writeReview
 app.post('/writeReview', (req, res) => {
 
@@ -221,7 +249,7 @@ app.post('/writeReview', (req, res) => {
   const reviewText = req.body.reviewText;
   const rating = req.body.rating;
   const review_by = req.session.user.username;
- 
+
   const query = `INSERT INTO reviews (review_text, user_reviewed, rating, reviewer_name) VALUES ($1, $2, $3, $4)`;
 
   db.none(query, [reviewText, username, rating, review_by])
@@ -237,13 +265,13 @@ app.post('/writeReview', (req, res) => {
 app.get('/reviewsByMe', (req, res) => {
   if (!req.session.user) {
     console.log('User not logged in to view reviews');
-    return res.redirect('/login');  
+    return res.redirect('/login');
   }
 
-  const current = req.session.user.username;  
+  const current = req.session.user.username;
 
   const query = 'SELECT review_text, rating, user_reviewed FROM reviews WHERE reviewer_name = $1';
-  
+
   db.any(query, [current])
     .then(reviews => {
       console.log(reviews); // Check to see data
@@ -263,7 +291,7 @@ app.get("/home", (req, res) => {
 //Write Messages
 app.post("/writeMessage", async (req, res) => {
   const sender_name = req.session.username;
-  const {reciever_name, title, message_text} = req.body;
+  const { reciever_name, title, message_text } = req.body;
   if (!reciever_name || reciever_name.length > 50) {
     return res.status(400).json({ error: "Receiver name is required and should not exceed 50 characters." });
   }
@@ -282,7 +310,7 @@ app.post("/writeMessage", async (req, res) => {
 
     res.status(201).json({ message: "Message written successfully" });
   } catch (error) {
-    if (error.code === '23505') { 
+    if (error.code === '23505') {
       res.status(400).json({ error: "A message with this title already exists for this receiver" });
     } else {
       console.error("Error occurred:", error);
@@ -293,14 +321,14 @@ app.post("/writeMessage", async (req, res) => {
 
 //message page
 app.get("/message_page", async (req, res) => {
-  const{username} = req.session.username;
+  const { username } = req.session.username;
 
   if (!req.session.user) {
     console.log('User not logged in to view messages');
-    return res.redirect('/login');  
+    return res.redirect('/login');
   }
 
-  try{
+  try {
     const recievedMessages = await db.any(
       'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE reciever_name = $1',
       [username]
@@ -315,7 +343,7 @@ app.get("/message_page", async (req, res) => {
       sentMessages
     });
 
-  }catch(error){
+  } catch (error) {
     console.error("Error fetching messages:", error);
     res.status(500).json({ error: "An internal server error occurred" });
   }
@@ -326,5 +354,5 @@ app.get("/message_page", async (req, res) => {
 
 // start the server
 const server = app.listen(3000);
-module.exports = {server, db}
+module.exports = { server, db }
 console.log('Server is listening on port 3000');
