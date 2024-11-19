@@ -92,10 +92,10 @@ app.post('/login', async (req, res) => {
                 });
           }
       else {
-        console.log('LOGGED IN')
         req.session.user = user;
         req.session.save();
         res.redirect('/home');
+        // res.redirect('/profile');
       }
     }
     else {
@@ -138,8 +138,8 @@ app.post('/register', async (req, res) => {
     const hash = await bcrypt.hash(req.body.password, 10);
 
     await db.none('INSERT INTO users(username, password) VALUES($1, $2)', [req.body.username, hash]);
-
-    res.redirect('/createProfile?userName=${req.body.username}');
+    const userName = req.body.username; 
+    res.redirect(`/createProfile?userName=${userName}`);
     //if there is an error inserting such as there is already that user name and password then rederrect to the regiser page
     // error is turned to true so that message partial shows danger background color and message value is set to appropriate message
   } 
@@ -149,22 +149,21 @@ app.post('/register', async (req, res) => {
   }
 });
 app.get('/createProfile', (req, res) => {
-  res.render('pages/createProfile')
+  const userName = req.query.userName;
+  res.render('pages/createProfile', {userName})
 });
 
 app.post('/createProfile', async (req, res) => {
-  const username = req.query.userName;
-  const userQuery = "SELECT * FROM users u, profiles p WHERE u.username = $1 AND u.userid = p.userid";
-
+  const userQuery = "SELECT * FROM users u WHERE u.username = $1";
+  const userName = req.body.userName;
   try {
-    const q3 = await db.oneOrNone(userQuery,[user]);
+    const q3 = await db.oneOrNone(userQuery,[userName]);
     
-    if (q3) {
+    if (!q3) {
       throw  new Error("User already exists");
     }
 
-    await db.none('INSERT INTO profiles(userid, first_name, last_name, profile_bio, profile_picture_url) VALUES($1, $2, $3, $4 $5)', [q3.userid, req.body.first_name, req.body.last_name, req.body.profile_bio, req.body.profile_picture_url]);
-    
+    await db.none('INSERT INTO profiles(userid, first_name, last_name, profile_bio) VALUES($1, $2, $3, $4)', [q3.userid, req.body.first_name, req.body.last_name, req.body.bio]);
     res.redirect('/login');
   } 
   catch (error) {
@@ -309,9 +308,9 @@ app.post("/writeMessage", async (req, res) => {
 });
 
 app.get("/profile", async (req,res) =>{
-  const q = "SELECT * FROM profiles p, users u WHERE p.profile_id = u.profile_id";
+  const q = "SELECT * FROM profiles p, users u WHERE p.userid = u.userid";
   const profileData = await db.any(q);
-  res.render('/profile', { profile: profileData[0] });
+  res.render('pages/profile', { profile: profileData[0] });
 });
 
 

@@ -1,9 +1,11 @@
 {{> message}}
 
-<h2 class = "text-center">Register</h2>
+<h2 class = "text-center">Create Account</h2>
 <div class = "d-flex justify-content-center">
     {{!-- verify correct fields are inputted for email: --}}
 <form method="POST" action="/createProfile">
+
+    <input type="hidden" name="userName" value="{{userName}}">
     <div class="form-group">
         <label for="first_name">First Name:</label>
         <input
@@ -33,10 +35,11 @@
             title="Tell us more about yourself"
         />
     </div>
-    <div class="form-group">
+    {{!-- adding profile to update profile --}}
+    {{!-- <div class="form-group">
         <label for="pfp" class="form-label">Upload your profile picture here</label>
         <input class="form-control" type="file" id="pfp"  accept=".jpg, .png, .pdf">
-    </div>
+    </div> --}}
     <div class="form-group">
         <button type="submit" class="btn btn-primary">Register</button>
     </div>
