@@ -1,0 +1,21 @@
+<h1 class="text-center">Profile</h1>
+<div class="ms-5 me-5">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Bio</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#with profile}}
+            <tr>
+                <td>{{first_name}}</td>  
+                <td>{{last_name}}</td>  
+                <td>{{profile_bio}}</td>     
+            </tr>
+            {{/with}}
+        </tbody>
+    </table>
+</div>

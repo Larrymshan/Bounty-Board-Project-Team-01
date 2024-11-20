@@ -1,0 +1,48 @@
+{{> message}}
+
+<h2 class = "text-center">Create Account</h2>
+<div class = "d-flex justify-content-center">
+    {{!-- verify correct fields are inputted for email: --}}
+<form method="POST" action="/createProfile">
+
+    <input type="hidden" name="userName" value="{{userName}}">
+    <div class="form-group">
+        <label for="first_name">First Name:</label>
+        <input
+            name="first_name"
+            id="first_name"
+            placeholder="first name ..."
+            required
+            title="Please enter your first name"
+        />
+    </div><div class="form-group">
+        <label for="last_name">Last Name:</label>
+        <input
+            name="last_name"
+            id="last_name"
+            placeholder="last name ..."
+            required
+            title="Please enter your last name"
+        />
+    </div>
+    <div class="form-group">
+        <label for="bio">Bio:</label>
+        <input
+            name="bio"
+            id="bio"
+            placeholder="write your bio here"
+            required
+            title="Tell us more about yourself"
+        />
+    </div>
+    {{!-- adding profile to update profile --}}
+    {{!-- <div class="form-group">
+        <label for="pfp" class="form-label">Upload your profile picture here</label>
+        <input class="form-control" type="file" id="pfp"  accept=".jpg, .png, .pdf">
+    </div> --}}
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+    <p>Click <a href="/login">here</a> to login</p>
+</form>
+</div>
