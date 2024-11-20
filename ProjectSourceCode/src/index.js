@@ -92,6 +92,7 @@ app.post('/login', async (req, res) => {
                 });
           }
       else {
+        console.log('LOGGED IN')
         req.session.user = user;
         req.session.save();
         res.redirect('/home');
