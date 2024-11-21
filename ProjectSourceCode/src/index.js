@@ -330,6 +330,12 @@ app.post("/writeMessage", async (req, res) => {
       [reciever_name, sender_name, title, message_text]
     );
 
+    /*const notificationText = "You have recieved a new message.";
+    const link = '/message_page';
+    await db.none(
+      'INSERT INTO notifications (sender_name, title, descript, '
+    );*/
+
     res.status(201).json({ message: "Message written successfully" });
   } catch (error) {
     if (error.code === '23505') {
@@ -343,7 +349,7 @@ app.post("/writeMessage", async (req, res) => {
 
 //message page
 app.get("/message_page", async (req, res) => {
-  const { username } = req.session.username;
+  const username = req.session.username;
 
   if (!req.session.user) {
     console.log('User not logged in to view messages');
@@ -359,7 +365,7 @@ app.get("/message_page", async (req, res) => {
       'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE sender_name = $1',
       [username]
     );
-    res.render("message_page", {
+    res.render("pages/message_page", {
       username,
       recievedMessages,
       sentMessages
