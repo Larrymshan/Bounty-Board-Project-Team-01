@@ -228,7 +228,7 @@ app.post('/report', (req, res) => {
 
       db.any(query1, [current])
         .then(reviews => {
-          console.log(reviews); // Check to see data
+          console.log(reviews);
           res.render('pages/reviews', {
             reviews: reviews
           });
@@ -274,7 +274,7 @@ app.get('/reviewsByMe', (req, res) => {
 
   db.any(query, [current])
     .then(reviews => {
-      console.log(reviews); // Check to see data
+      console.log(reviews);
       res.render('pages/reviewsByMe', {
         reviews: reviews
       });
@@ -284,6 +284,39 @@ app.get('/reviewsByMe', (req, res) => {
       res.status(500).send('An error occurred while fetching reviews.');
     });
 });
+
+app.post('/deleteReview', (req, res) => {
+  const review_id = req.body.review_id;
+  console.log('Received request body:', req.body);
+  
+  const query = 'DELETE FROM reviews WHERE review_id = $1';
+  
+  db.none(query, [review_id])
+    .then(() => {
+      const current = req.session.user.username;
+
+      const query1 = 'SELECT review_text, rating, reviewer_name, review_id FROM reviews WHERE user_reviewed = $1 ORDER BY review_id';
+
+      db.any(query1, [current])
+        .then(reviews => {
+          console.log(reviews); 
+          res.render('pages/reviewsByMe', {
+            reviews: reviews
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching reviews:', error);
+          res.status(500).send('An error occurred while fetching the reviews.');
+        });
+
+    })
+    .catch(error => {
+      console.error('Error deleting the review:', error);
+      res.status(500).send('An error occurred while deleting the review.');
+    });
+});
+
+
 app.get("/home", (req, res) => {
   res.render('pages/home')
 });
