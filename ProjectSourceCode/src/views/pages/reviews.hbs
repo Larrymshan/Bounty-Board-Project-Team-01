@@ -12,12 +12,11 @@
         <tbody>
             {{#each reviews}}
             <tr>
-                <td>{{reviewer_name}}</td> 
-                <td>{{review_text}}</td>  
-                <td>{{rating}}</td>   
+                <td>{{reviewer_name}}</td>
+                <td>{{review_text}}</td>
+                <td>{{rating}}</td>
                 <td>
                     <form method="POST" action="/report">
-
                         <input type="hidden" name="review_id" value={{review_id}}>
                         <button type="submit" class="btn btn-outline-danger">Report</button>
                     </form>
