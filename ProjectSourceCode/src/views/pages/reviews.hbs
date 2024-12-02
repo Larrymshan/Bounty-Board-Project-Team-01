@@ -1,28 +1,42 @@
-<h1 class="text-center">Reviews</h1>
-<a class="nav-link" href="/reviewsByMe">Review by you</a>
-<div class="ms-5 me-5">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Review By</th>
-                <th>Review Comment</th>
-                <th>Review Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each reviews}}
-            <tr>
-                <td>{{reviewer_name}}</td>
-                <td>{{review_text}}</td>
-                <td>{{rating}}</td>
-                <td>
-                    <form method="POST" action="/report">
-                        <input type="hidden" name="review_id" value={{review_id}}>
-                        <button type="submit" class="btn btn-outline-danger">Report</button>
-                    </form>
-                </td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Reviews for You</h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-primary" href="/reviewsByMe">Your Reviews</a>
+        <a class="btn btn-secondary" href="/home">Back to Home</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">Review By</th>
+                    <th scope="col">Review Comment</th>
+                    <th scope="col">Review Score</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each reviews}}
+                <tr>
+                    <td>{{reviewer_name}}</td>
+                    <td>{{review_text}}</td>
+                    <td>{{rating}}</td>
+                    <td>
+                        <form method="POST" action="/report" class="d-inline">
+                            <input type="hidden" name="review_id" value="{{review_id}}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Report</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    {{#if reviews.length}}
+    <p class="text-muted text-end mt-3">Total reviews: {{reviews.length}}</p>
+    {{else}}
+    <p class="text-center text-muted mt-4">No reviews found. Start reviewing now!</p>
+    {{/if}}
 </div>
