@@ -1,27 +1,41 @@
-<h1 class="text-center">Reviews</h1>
-<div class="ms-5 me-5">
-    <table class="table">
-        <thead>
-            <tr>
-                <th>You reviewed</th>
-                <th>Review Comment</th>
-                <th>Review Score</th>
-            </tr>
-        </thead>
-        <tbody>
-            {{#each reviews}}
-            <tr>
-                <td>{{user_reviewed}}</td>
-                <td>{{review_text}}</td>
-                <td>{{rating}}</td>
-                <td>
-                    <form method="POST" action="/deleteReview">
-                        <input type="hidden" name="review_id" value={{review_id}}>
-                        <button type="submit" class="btn btn-outline-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {{/each}}
-        </tbody>
-    </table>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Your Reviews</h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a class="btn btn-secondary" href="/home">Back to Home</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">You Reviewed</th>
+                    <th scope="col">Review Comment</th>
+                    <th scope="col">Review Score</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each reviews}}
+                <tr>
+                    <td>{{user_reviewed}}</td>
+                    <td>{{review_text}}</td>
+                    <td>{{rating}}</td>
+                    <td>
+                        <form method="POST" action="/deleteReview" class="d-inline">
+                            <input type="hidden" name="review_id" value="{{review_id}}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+
+    {{#if reviews.length}}
+    <p class="text-muted text-end mt-3">Total reviews: {{reviews.length}}</p>
+    {{else}}
+    <p class="text-center text-muted mt-4">You haven't reviewed anyone yet. Start now!</p>
+    {{/if}}
 </div>
