@@ -3,23 +3,23 @@ Bounty Board Release notes
 November 18, 2024
 
 Bounty Board now includes review reporting where users can flag
-innapropriate reviews. In future releases these flagged reviews
+inappropriate reviews. In future releases these flagged reviews
 Will be sent to our admin team who will handle the incident. 
 Users now have more freedom when writing reviews with this
-latest release there is now a cancle review button that
+latest release there is now a cancel review button that
 that ends the review writing process. We have started development 
 on ads that will be sent to our website. Soon users will be able 
-to expericne peronalized ads.
+to experience personalized ads.
 
 Review Reporting:
 
 Users now have the option to flag reviews as inappropriate.
-This response is saved into the rerviews database where our
+This response is saved into the reviews database where our
 admin team is notified of the incident.
 
 Improved User Experience for Review Form:
 
-There is now a button to cancel writting a review.
+There is now a button to cancel writing a review.
 This eliminates confusion with users who previously were not
 sure how to exit the review writing process.
 
