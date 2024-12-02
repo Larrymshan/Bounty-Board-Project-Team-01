@@ -1,29 +1,36 @@
-<form method="POST" action="/writeReview">
-  <div class="mb-3">
-    <label for="username" class="form-label">Who would you like to review?</label>
-    <input type="text" class="form-control" id="username" name="username" required>
-  </div>
-  <div class="mb-3">
-    <label for="rating" class="form-label">Please choose a rating</label>
-    <select id="rating" name="rating" class="form-control" required>
-      <option value="1">1</option>
-      <option value="2">2</option>
-      <option value="3">3</option>
-      <option value="4">4</option>
-      <option value="5">5</option>
-      <option value="6">6</option>
-      <option value="7">7</option>
-      <option value="8">8</option>
-      <option value="9">9</option>
-      <option value="10">10</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label for="reviewText" class="form-label">Please type review here</label>
-    <input type="text" class="form-control" id="reviewText" name="reviewText" required>
-  </div>
-  <button type="submit" class="btn btn-primary">Submit Review</button>
-  <a class="btn btn-secondary" href="/home">Cancel Review</a>
-</form>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Write a Review</h1>
 
+  <form method="POST" action="/writeReview" class="shadow p-4 rounded">
+    <div class="mb-3">
+      <label for="username" class="form-label">Who would you like to review?</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+    </div>
 
+    <div class="mb-3">
+      <label for="rating" class="form-label">Please choose a rating</label>
+      <select id="rating" name="rating" class="form-control" required>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="reviewText" class="form-label">Please type review here</label>
+      <input type="text" class="form-control" id="reviewText" name="reviewText" required>
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-primary">Submit Review</button>
+      <a class="btn btn-secondary" href="/home">Cancel Review</a>
+    </div>
+  </form>
+</div>
