@@ -266,23 +266,27 @@ app.post('/report', (req, res) => {
 
 // post writeReview
 app.post('/writeReview', (req, res) => {
+  if (!req.session.user) {
+    console.log('User not logged in to submit a review');
+    return res.redirect('/login');
+  }
+  
+  const { username, rating, reviewText } = req.body;
+  const reviewer = req.session.user.username;
 
-  const username = req.body.username;
-  const reviewText = req.body.reviewText;
-  const rating = req.body.rating;
-  const review_by = req.session.user.username;
-
-  const query = `INSERT INTO reviews (review_text, user_reviewed, rating, reviewer_name) VALUES ($1, $2, $3, $4)`;
-
-  db.none(query, [reviewText, username, rating, review_by])
-    .then(() => {
-      res.redirect('reviewsByMe');
-    })
-    .catch(error => {
-      console.error('Error inserting data:', error);
-      res.status(500).send('An error occurred while inserting the review.');
-    });
+  const query = `INSERT INTO reviews (reviewer_name, user_reviewed, rating, review_text) VALUES ($1, $2, $3, $4)`;
+  
+  db.none(query, [reviewer, username, rating, reviewText])
+  .then(() => {
+    console.log('Review successfully added');
+    res.redirect('/reviewsByMe');
+  })
+  .catch(error => {
+    console.error('Error submitting review:', error);
+    res.status(500).send('An error occurred while submitting the review.');
+  });
 });
+
 
 app.get('/reviewsByMe', (req, res) => {
   if (!req.session.user) {
