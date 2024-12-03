@@ -118,7 +118,6 @@ app.use((req, res, next) => {
 
 app.get('/register', (req, res) => {
   res.render('pages/register')
-
 });
 
 app.post('/register', async (req, res) => {
@@ -505,6 +504,25 @@ app.get("/editProfile", async (req,res) =>{
   const q = "SELECT * FROM profiles p, users u WHERE p.userid = u.userid AND u.username = $1";
   const profileData = await db.any(q, req.session.user.username);
   res.render('pages/editProfile', { profile: profileData[0] });
+});
+
+
+app.get('/deleteProfile', (req, res) => {
+  res.render('pages/deleteProfile')
+});
+
+app.post('/deleteProfile', async (req, res) => {
+  const u = req.session.user;
+  if(req.body.password == req.body.password2){
+    const id = u.userid;
+    const q = "DELETE FROM users WHERE userid = $1";
+    db.none(q,id);
+    req.session.destroy() 
+    res.render('pages/logout', {message: 'successfully deleted account'})
+  }
+  else{
+    res.render('pages/deleteProfile', { message: 'passwords did not match', error: true });
+  }
 });
 
 // start the server
