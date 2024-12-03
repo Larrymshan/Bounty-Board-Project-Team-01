@@ -465,7 +465,7 @@ app.post('/CreateBounty', (req, res) => {
     return res.redirect('/login');
   }
   
-  const {title, job_description, price,} = req.body;
+  const { title, job_description, price } = req.body;
   const poster = req.session.user.username;
 
   console.log(req.body); 
@@ -473,14 +473,16 @@ app.post('/CreateBounty', (req, res) => {
   const query = `INSERT INTO Bounty (title, job_description, price, poster) VALUES ($1, $2, $3, $4)`;
   
   db.none(query, [title, job_description, price, poster])
-  .then(() => {
-    console.log('Bounty successfully added');
-    res.redirect('/home');
-  })
-  .catch(error => {
-    console.error('Error submitting Bounty', error);
-    res.status(500).send('An error occurred while submitting the bounty.');
-  });
+    .then(() => {
+      console.log('Bounty successfully added');
+      res.redirect('/home');
+    })
+    .catch(error => {
+      console.error('Error submitting Bounty', error);
+      res.status(500).send('An error occurred while submitting the bounty.');
+    });
+});
+
 //edit profile
 app.post("/editProfile", async(req,res)=>{
   const id = req.session.user.userid;
