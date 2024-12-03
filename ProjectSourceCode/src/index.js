@@ -414,11 +414,35 @@ app.get("/message_page", async (req, res) => {
   }
 
 });
-
+//profile
 app.get("/profile", async (req,res) =>{
-  const q = "SELECT * FROM profiles p, users u WHERE p.userid = u.userid";
-  const profileData = await db.any(q);
+  const q = "SELECT * FROM profiles p, users u WHERE p.userid = u.userid AND u.username = $1";
+  const profileData = await db.any(q, req.session.user.username);
   res.render('pages/profile', { profile: profileData[0] });
+});
+
+//edit profile
+app.post("/editProfile", async(req,res)=>{
+  const id = req.session.user.userid;
+  if(req.body.first_name){
+    const q = "UPDATE profiles SET first_name = $1 WHERE userid = $2";
+    const profileData = await db.any(q, [req.body.first_name, id]);
+  }
+  if(req.body.last_name){
+    const q = "UPDATE profiles SET last_name = $1 WHERE userid = $2";
+    const profileData = await db.any(q, [req.body.last_name, id]);
+  }
+  if(req.body.bio){
+    const q = "UPDATE profiles SET profile_bio = $1 WHERE userid = $2";
+    const profileData = await db.any(q, [req.body.bio, id]);
+  }
+  res.redirect("/profile");
+});
+
+app.get("/editProfile", async (req,res) =>{
+  const q = "SELECT * FROM profiles p, users u WHERE p.userid = u.userid AND u.username = $1";
+  const profileData = await db.any(q, req.session.user.username);
+  res.render('pages/editProfile', { profile: profileData[0] });
 });
 
 // start the server
