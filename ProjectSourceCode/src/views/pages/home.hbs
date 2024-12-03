@@ -1,5 +1,4 @@
-<div class="container d-flex justify-content-center text-center"
-  style=" align-items: flex-start; padding-top: 20px;">
+<div class="container d-flex justify-content-center text-center" style=" align-items: flex-start; padding-top: 20px;">
   <div>
     <h1>Welcome to Bounty Board</h1>
     <p>The best place to get all of the tasks you don't want to do done for you!</p>
@@ -15,7 +14,8 @@
           <th scope="col">Job Title</th>
           <th scope="col">Job Description</th>
           <th scope="col">Job Price</th>
-          <th scope="col">Actions</th>
+          <th scope="col">Poster</th>
+          <th scope="col">Take Bounty</th>
         </tr>
       </thead>
       <tbody>
@@ -26,6 +26,9 @@
           <td>{{price}}</td>
           <td>{{poster}}</td>
           <td>
+            <form method="POST" action="take" class="d-inline">
+              <input type="hidden" name="BountyID" value="{{BountyId}}">
+              <button type="submit" class="btn btn-outline-danger btn-sm">Take Bounty</button>
             </form>
           </td>
         </tr>
