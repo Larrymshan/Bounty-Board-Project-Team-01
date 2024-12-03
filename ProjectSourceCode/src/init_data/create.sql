@@ -45,5 +45,21 @@ CREATE TABLE Bounty (
     title TEXT NOT NULL,
     job_description TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
-    poster VARCHAR(50) NOT NULL
+    poster VARCHAR(50) NOT NULL,
+    is_taken BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE Accounts (
+    account_id SERIAL PRIMARY KEY,       -- Unique ID for the account
+    userid INT NOT NULL,                -- Links to the Users table
+    balance NUMERIC(10, 2) NOT NULL DEFAULT 100, -- Current balance (money)
+    FOREIGN KEY (userid) REFERENCES users(userid) -- Foreign key constraint
+);
+
+CREATE TABLE Transactions (
+    transaction_id SERIAL PRIMARY KEY,  -- Unique ID for each transaction
+    account_id INT NOT NULL,            -- Links to the Accounts table
+    transaction_type VARCHAR(50) NOT NULL, -- e.g., "deposit", "withdrawal", "transfer"
+    amount NUMERIC(10, 2) NOT NULL,     -- Amount of money involved
+    FOREIGN KEY (account_id) REFERENCES Accounts(account_id) -- Foreign key constraint
 );
