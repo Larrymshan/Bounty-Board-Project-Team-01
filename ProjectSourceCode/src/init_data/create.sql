@@ -38,3 +38,12 @@ CREATE TABLE messages (
     message_text TEXT NOT NULL,
     PRIMARY KEY (reciever_name, title)
 );
+
+DROP TABLE IF EXISTS Bounty;
+CREATE TABLE Bounty (
+    BountyID SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    job_description TEXT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    poster VARCHAR(50) NOT NULL
+);

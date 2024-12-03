@@ -271,12 +271,12 @@ app.post('/writeReview', (req, res) => {
     return res.redirect('/login');
   }
   
-  const { username, rating, reviewText } = req.body;
+  const { username, rating, review_text } = req.body;
   const reviewer = req.session.user.username;
 
   const query = `INSERT INTO reviews (reviewer_name, user_reviewed, rating, review_text) VALUES ($1, $2, $3, $4)`;
   
-  db.none(query, [reviewer, username, rating, reviewText])
+  db.none(query, [reviewer, username, rating, review_text])
   .then(() => {
     console.log('Review successfully added');
     res.redirect('/reviewsByMe');
@@ -312,39 +312,72 @@ app.get('/reviewsByMe', (req, res) => {
 });
 
 app.post('/deleteReview', (req, res) => {
-  const review_id = req.body.review_id;
-  console.log('Received request body:', req.body);
-  
-  const query = 'DELETE FROM reviews WHERE review_id = $1';
-  
-  db.none(query, [review_id])
+  const review_id = req.body.review_id; // Raw value from the form
+  console.log('Received review_id:', review_id);
+
+  // Validate review_id
+  if (!review_id || isNaN(parseInt(review_id, 10))) {
+    console.error('Invalid or missing review_id:', review_id);
+    return res.status(400).send('Invalid or missing review ID.');
+  }
+
+  // Parse review_id as an integer
+  const parsedReviewId = parseInt(review_id, 10);
+
+  // SQL query to delete the review
+  const deleteQuery = 'DELETE FROM reviews WHERE review_id = $1';
+
+  db.none(deleteQuery, [parsedReviewId])
     .then(() => {
-      const current = req.session.user.username;
+      console.log(`Review with ID ${parsedReviewId} successfully deleted.`);
 
-      const query1 = 'SELECT review_text, rating, reviewer_name, review_id FROM reviews WHERE user_reviewed = $1 ORDER BY review_id';
+      // Ensure user is logged in
+      if (!req.session.user || !req.session.user.username) {
+        console.error('User not logged in. Redirecting to login.');
+        return res.redirect('/login');
+      }
 
-      db.any(query1, [current])
+      const currentUser = req.session.user.username;
+
+      // SQL query to fetch updated reviews
+      const fetchQuery = `
+        SELECT review_text, rating, reviewer_name, review_id
+        FROM reviews
+        WHERE user_reviewed = $1
+        ORDER BY review_id
+      `;
+
+      return db.any(fetchQuery, [currentUser])
         .then(reviews => {
-          console.log(reviews); 
-          res.render('pages/reviewsByMe', {
-            reviews: reviews
-          });
+          console.log('Fetched reviews after deletion:', reviews);
+          res.render('pages/reviewsByMe', { reviews });
         })
-        .catch(error => {
-          console.error('Error fetching reviews:', error);
-          res.status(500).send('An error occurred while fetching the reviews.');
+        .catch(fetchError => {
+          console.error('Error fetching updated reviews:', fetchError);
+          res.status(500).send('Error fetching updated reviews.');
         });
-
     })
-    .catch(error => {
-      console.error('Error deleting the review:', error);
-      res.status(500).send('An error occurred while deleting the review.');
+    .catch(deleteError => {
+      console.error('Error deleting review:', deleteError);
+      res.status(500).send('Error deleting the review.');
     });
 });
 
-
 app.get("/home", (req, res) => {
-  res.render('pages/home')
+
+  const query = 'SELECT title, job_description, price, poster FROM Bounty';
+
+  db.any(query,)
+  .then(Bounty => {
+    console.log(Bounty); // Check to see data
+    res.render('pages/home', {
+      Bounty: Bounty
+    });
+  })
+  .catch(error => {
+    console.error('Error fetching reviews:', error);
+    res.status(500).send('An error occurred while fetching reviews.');
+  });
 });
 
 //Write Messages
@@ -419,6 +452,35 @@ app.get("/profile", async (req,res) =>{
   const q = "SELECT * FROM profiles p, users u WHERE p.userid = u.userid";
   const profileData = await db.any(q);
   res.render('pages/profile', { profile: profileData[0] });
+});
+
+app.get('/CreateBounty', (req, res) => {
+  res.render('pages/CreateBounty')
+
+});
+
+app.post('/CreateBounty', (req, res) => {
+  if (!req.session.user) {
+    console.log('User not logged in to submit a review');
+    return res.redirect('/login');
+  }
+  
+  const {title, job_description, price,} = req.body;
+  const poster = req.session.user.username;
+
+  console.log(req.body); 
+
+  const query = `INSERT INTO Bounty (title, job_description, price, poster) VALUES ($1, $2, $3, $4)`;
+  
+  db.none(query, [title, job_description, price, poster])
+  .then(() => {
+    console.log('Bounty successfully added');
+    res.redirect('/home');
+  })
+  .catch(error => {
+    console.error('Error submitting Bounty', error);
+    res.status(500).send('An error occurred while submitting the bounty.');
+  });
 });
 
 // start the server
