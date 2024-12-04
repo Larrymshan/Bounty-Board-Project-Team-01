@@ -403,7 +403,7 @@ app.post('/reviewsByMe', (req, res) => {
 
 app.get("/home", (req, res) => {
 
-  const query = 'SELECT title, job_description, price, poster, job FROM Bounty';
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty ORDER BY job';
 
   db.any(query,)
   .then(Bounty => {
