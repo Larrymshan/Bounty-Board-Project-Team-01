@@ -10,6 +10,7 @@ const pgp = require('pg-promise')(); // To connect to the Postgres DB from the n
 const bodyParser = require('body-parser');
 const session = require('express-session'); // To set the session object.
 const bcrypt = require('bcryptjs'); //  To hash passwords
+const nodemailer = require('nodemailer');//for emailing password reset
 
 // Connect to DB 
 
@@ -108,11 +109,85 @@ app.post('/login', async (req, res) => {
     res.redirect('/register');
   }
 });
+
+
 app.use((req, res, next) => {
   // Make user data globally available in all templates
   res.locals.user = req.session.user || null;
   next();
 });
+
+// reset routes
+app.get('/resetPassword1', (req, res) => {
+  res.render('pages/resetPassword1')
+});
+
+app.post('/resetPassword1', async (req, res) => {
+  const q = "SELECT * FROM users WHERE username = $1";
+  const u = req.body.username;
+  try{
+    const temp = await db.oneOrNone(q,u);
+    if (!temp) {
+      throw new Error("User doesnt exists");
+    }
+    res.redirect(`/resetPassword2?userName=${u}`);
+  }catch(error){
+    // console.error('No such user exists.', error);
+    res.render(`pages/resetPassword1`, {message: "No such user exists."});
+
+  }
+  // try {
+  //   const transporter = nodemailer.createTransport({
+  //     service: 'smtp.mail.yahoo.com',
+  //     port: 465, 
+  //     secure: true, 
+  //     auth: {
+  //       user: 'BountyBoardWebsite@yahoo.com', 
+  //       pass: 'CSCI3308Project',    
+  //     },
+  //   });
+  //   const code = Math.floor(Math.random() * (9999 - 1000 + 1)) + 1000;
+  //   // Email options
+  //   const mailOptions = {
+  //     from: 'bountyboardwebsite@yahoo.com',
+  //     to: req.body.username,
+  //     subject: 'Password Reset Request',
+  //     text: 'Your password reset code is: ',
+  //   };
+
+  //   // Send email
+  //   const info = await transporter.sendMail(mailOptions);
+  //   const userName = req.body.username; 
+  //   res.redirect(`/resetPassword2?userName=${userName}?code=${code}`);
+  // } catch (error) {
+  //   console.error('Error sending email:', error);
+  //   res.status(500).json({ error: 'Failed to send email' });
+  // }
+});
+
+app.get('/resetPassword2', (req, res) => {
+  const userName = req.query.userName;
+  // const code = req.query.code;
+  res.render('pages/resetPassword2', {userName})
+});
+
+app.post("/resetPassword2", async(req,res)=>{
+  const email = req.body.userName;
+
+  // const code = req.body.code;
+  const userQuery = "SELECT * FROM users u WHERE u.username = $1";
+  const userName = req.body.userName;
+  const q3 = await db.oneOrNone(userQuery,[userName]);
+
+  // if(code == req.body.code){
+    const hash = await bcrypt.hash(req.body.newPassword, 10);
+    const q = "UPDATE users SET password = $1 WHERE username = $2";
+    const profileData = await db.any(q, [hash, userName]);
+  // }
+  res.redirect("/login");
+});
+
+
 
 // Register routes
 
