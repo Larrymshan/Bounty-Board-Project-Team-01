@@ -295,7 +295,7 @@ app.get('/reviewsByMe', (req, res) => {
 
   const current = req.session.user.username;
 
-  const query = 'SELECT review_text, rating, user_reviewed FROM reviews WHERE reviewer_name = $1';
+  const query = 'SELECT review_text, rating, user_reviewed, review_num FROM reviews WHERE reviewer_name = $1';
 
   db.any(query, [current])
     .then(reviews => {
@@ -310,61 +310,27 @@ app.get('/reviewsByMe', (req, res) => {
     });
 });
 
-app.post('/deleteReview', (req, res) => {
-  const review_id = req.body.review_id; // Raw value from the form
-  console.log('Received review_id:', review_id);
+app.post('/reviewsByMe', (req, res) => {
+  const review_id = parseInt(req.body.review_id);  // Parse review number from the request body
+  console.log('Received ReviewNum:', review_id);
 
-  // Validate review_id
-  if (!review_id || isNaN(parseInt(review_id, 10))) {
-    console.error('Invalid or missing review_id:', review_id);
-    return res.status(400).send('Invalid or missing review ID.');
-  }
+  // SQL query to delete the review with the specified review_num
+  const del = `DELETE FROM reviews WHERE review_num = $1`;
 
-  // Parse review_id as an integer
-  const parsedReviewId = parseInt(review_id, 10);
-
-  // SQL query to delete the review
-  const deleteQuery = 'DELETE FROM reviews WHERE review_id = $1';
-
-  db.none(deleteQuery, [parsedReviewId])
+  // Execute the query
+  db.none(del, [review_id])  // Use db.none() if you're not expecting any data to return
     .then(() => {
-      console.log(`Review with ID ${parsedReviewId} successfully deleted.`);
-
-      // Ensure user is logged in
-      if (!req.session.user || !req.session.user.username) {
-        console.error('User not logged in. Redirecting to login.');
-        return res.redirect('/login');
-      }
-
-      const currentUser = req.session.user.username;
-
-      // SQL query to fetch updated reviews
-      const fetchQuery = `
-        SELECT review_text, rating, reviewer_name, review_id
-        FROM reviews
-        WHERE user_reviewed = $1
-        ORDER BY review_id
-      `;
-
-      return db.any(fetchQuery, [currentUser])
-        .then(reviews => {
-          console.log('Fetched reviews after deletion:', reviews);
-          res.render('pages/reviewsByMe', { reviews });
-        })
-        .catch(fetchError => {
-          console.error('Error fetching updated reviews:', fetchError);
-          res.status(500).send('Error fetching updated reviews.');
-        });
+      res.redirect('/reviewsByMe');
     })
-    .catch(deleteError => {
-      console.error('Error deleting review:', deleteError);
-      res.status(500).send('Error deleting the review.');
+    .catch((error) => {
+      console.error('Error deleting review:', error);
+      res.status(500).json({ message: 'Failed to delete review', error: error.message });
     });
 });
 
 app.get("/home", (req, res) => {
 
-  const query = 'SELECT title, job_description, price, poster FROM Bounty';
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty';
 
   db.any(query,)
   .then(Bounty => {
@@ -524,6 +490,43 @@ app.post('/deleteProfile', async (req, res) => {
     res.render('pages/deleteProfile', { message: 'passwords did not match', error: true });
   }
 });
+
+app.post('/home', (req, res) => {
+  const bountyId = parseInt(req.body.BountyID);
+  const u = req.session.user;
+  const takenBy = u.username;
+  console.log('Received BountyID:', bountyId);
+  console.log('Taken by:', takenBy);
+
+  if (!bountyId || isNaN(bountyId)) {
+    return res.status(400).send('Invalid or missing BountyID.');
+  }
+
+  const checkQuery = `SELECT is_taken FROM Bounty WHERE BountyID = $1`;
+  db.one(checkQuery, [bountyId])
+    .then((bounty) => {
+      if (bounty.is_taken) {
+        return res.status(400).send('This bounty has already been taken.');
+      }
+
+      const updateQuery = `
+        UPDATE Bounty SET is_taken = TRUE, taken_by = $2 WHERE BountyID = $1
+      `;
+      db.none(updateQuery, [bountyId, takenBy])
+        .then(() => {
+          res.redirect('/home');
+        })
+        .catch((error) => {
+          console.error('Error updating bounty status:', error);
+          res.status(500).send('An error occurred while taking the bounty.');
+        });
+    })
+    .catch((error) => {
+      console.error('Error checking bounty status:', error);
+      res.status(500).send('An error occurred while checking the bounty.');
+    });
+});
+
 
 // start the server
 const server = app.listen(3000);
