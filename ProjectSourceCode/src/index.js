@@ -632,6 +632,35 @@ app.get('/addFunds', (req, res) => {
   res.render('pages/addFunds')
 });
 
+app.get("/yourCreatedBounties", (req, res) => {
+  const u = req.session.user;
+  const createdBy = u.username;
+
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE poster = $1';
+
+  db.any(query,[createdBy])
+  .then(Bounty => {
+    res.render('pages/yourCreatedBounties', {
+      Bounty: Bounty
+    });
+  })
+});
+
+app.post('/deleteBounty', (req, res) => {
+  const BountyID = parseInt(req.body.BountyID);
+  console.log('Received ReviewNum:', BountyID);
+
+  const del = `DELETE FROM Bounty WHERE job = $1`;
+
+  db.none(del, [BountyID])
+    .then(() => {
+      res.redirect('/yourCreatedBounties');
+    })
+    .catch((error) => {
+      console.error('Error deleting bounty:', error);
+      res.status(500).json({ message: 'Failed to delete bounty', error: error.message });
+    });
+});
 
 
 // start the server
