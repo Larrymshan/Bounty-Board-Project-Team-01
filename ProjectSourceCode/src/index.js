@@ -386,14 +386,12 @@ app.get('/reviewsByMe', (req, res) => {
 });
 
 app.post('/reviewsByMe', (req, res) => {
-  const review_id = parseInt(req.body.review_id);  // Parse review number from the request body
+  const review_id = parseInt(req.body.review_id);
   console.log('Received ReviewNum:', review_id);
 
-  // SQL query to delete the review with the specified review_num
   const del = `DELETE FROM reviews WHERE review_num = $1`;
 
-  // Execute the query
-  db.none(del, [review_id])  // Use db.none() if you're not expecting any data to return
+  db.none(del, [review_id])
     .then(() => {
       res.redirect('/reviewsByMe');
     })
@@ -577,17 +575,16 @@ app.post('/home', (req, res) => {
     return res.status(400).send('Invalid or missing BountyID.');
   }
 
-  const checkQuery = `SELECT is_taken FROM Bounty WHERE BountyID = $1`;
-  db.one(checkQuery, [bountyId])
+  const query = `SELECT is_taken FROM Bounty WHERE BountyID = $1`;
+  db.one(query, [bountyId])
     .then((bounty) => {
       if (bounty.is_taken) {
         return res.status(400).send('This bounty has already been taken.');
       }
 
-      const updateQuery = `
-        UPDATE Bounty SET is_taken = TRUE, taken_by = $2 WHERE BountyID = $1
+      const query = `UPDATE Bounty SET is_taken = TRUE, taken_by = $2 WHERE BountyID = $1
       `;
-      db.none(updateQuery, [bountyId, takenBy])
+      db.none(query, [bountyId, takenBy])
         .then(() => {
           res.redirect('/home');
         })
@@ -601,6 +598,36 @@ app.post('/home', (req, res) => {
       res.status(500).send('An error occurred while checking the bounty.');
     });
 });
+
+app.get("/activeBounties", (req, res) => {
+  const u = req.session.user;
+  const taken= u.username;
+
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE taken_by = $1';
+
+  db.any(query,[taken])
+  .then(Bounty => {
+    res.render('pages/activeBounties', {
+      Bounty: Bounty
+    });
+  })
+});
+
+app.post('/activeBounties', (req, res) => {
+  const bountyId = parseInt(req.body.BountyID, 10);
+
+  if (!bountyId || isNaN(bountyId)) {
+    return res.status(400).send('Invalid or missing BountyID.');
+  }
+
+  const query = `UPDATE Bounty SET taken_by = NULL, is_taken = FALSE WHERE BountyID = $1`;
+
+  db.query(query, [bountyId])
+    .then(() => {
+      res.redirect('/activeBounties');
+    })
+});
+
 
 
 // start the server
