@@ -628,6 +628,10 @@ app.post('/activeBounties', (req, res) => {
     })
 });
 
+app.get('/addFunds', (req, res) => {
+  res.render('pages/addFunds')
+});
+
 
 
 // start the server
