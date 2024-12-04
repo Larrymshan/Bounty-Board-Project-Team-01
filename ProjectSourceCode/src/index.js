@@ -126,8 +126,8 @@ app.post('/resetPassword1', async (req, res) => {
   const q = "SELECT * FROM users WHERE username = $1";
   const u = req.body.username;
   try{
-    const temp = db.none(q,u);
-    if (temp) {
+    const temp = await db.oneOrNone(q,u);
+    if (!temp) {
       throw new Error("User doesnt exists");
     }
     res.redirect(`/resetPassword2?userName=${u}`);
