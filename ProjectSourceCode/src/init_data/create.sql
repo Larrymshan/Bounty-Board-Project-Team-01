@@ -28,7 +28,8 @@ CREATE TABLE reviews (
     reviewer_name VARCHAR(50) NOT NULL,
     rating INT NOT NULL,
     user_reviewed TEXT NOT NULL,
-    flagged BOOLEAN DEFAULT FALSE
+    flagged BOOLEAN DEFAULT FALSE,
+    review_num SERIAL
 );
    
 CREATE TABLE messages (
@@ -46,20 +47,22 @@ CREATE TABLE Bounty (
     job_description TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     poster VARCHAR(50) NOT NULL,
-    is_taken BOOLEAN DEFAULT FALSE
+    is_taken BOOLEAN DEFAULT FALSE,
+    job SERIAL,
+    taken_by VARCHAR(50)
 );
 
 CREATE TABLE Accounts (
-    account_id SERIAL PRIMARY KEY,       -- Unique ID for the account
-    userid INT NOT NULL,                -- Links to the Users table
-    balance NUMERIC(10, 2) NOT NULL DEFAULT 100, -- Current balance (money)
-    FOREIGN KEY (userid) REFERENCES users(userid) -- Foreign key constraint
+    account_id SERIAL PRIMARY KEY, 
+    userid INT NOT NULL,
+    balance NUMERIC(10, 2) NOT NULL DEFAULT 100,
+    FOREIGN KEY (userid) REFERENCES users(userid) 
 );
 
 CREATE TABLE Transactions (
-    transaction_id SERIAL PRIMARY KEY,  -- Unique ID for each transaction
-    account_id INT NOT NULL,            -- Links to the Accounts table
-    transaction_type VARCHAR(50) NOT NULL, -- e.g., "deposit", "withdrawal", "transfer"
-    amount NUMERIC(10, 2) NOT NULL,     -- Amount of money involved
-    FOREIGN KEY (account_id) REFERENCES Accounts(account_id) -- Foreign key constraint
+    transaction_id SERIAL PRIMARY KEY, 
+    account_id INT NOT NULL,    
+    transaction_type VARCHAR(50) NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
 );
