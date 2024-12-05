@@ -1,7 +1,5 @@
 <header>
 
-  {{>title}}
-
   {{#if user}}
     {{> nav }} <!-- Display the navigation bar only if the user is logged in -->
     {{else}}
@@ -9,20 +7,6 @@
     </span>
   {{/if}}
 
-
-  <div id="postPriceFormContainer" style="display: none; position: fixed; top: 20%; left: 50%; transform: translate(-50%, 0); background-color: white; padding: 20px; border: 1px solid #ccc; z-index: 1000;">
-    <h2>Make a New Post</h2>
-    <form id="postPriceForm">
-      <label for="itemName">Item Name:</label>
-      <input type="text" id="itemName" name="itemName" required>
-      
-      <label for="price">Price ($):</label>
-      <input type="number" id="price" name="price" required>
-      
-      <button type="submit">Submit</button>
-      <button type="button" id="closePostFormButton">Close</button>
-    </form>
-  </div>
 
 
 <!-- Pop-Up Structure -->
