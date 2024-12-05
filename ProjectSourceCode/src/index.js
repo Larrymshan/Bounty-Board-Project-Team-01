@@ -461,12 +461,6 @@ app.post("/writeMessage", async (req, res) => {
 
     res.status(201).json({ message: "Message written successfully" });
   } catch (error) {
-    if (error.code === '23505') {
-      res.status(400).json({ error: "A message with this title already exists for this receiver" });
-    } else {
-      console.error("Error occurred:", error);
-      res.status(500).json({ error: "An internal server error occurred" });
-    }
   }
 });
 
