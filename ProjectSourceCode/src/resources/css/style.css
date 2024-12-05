@@ -2,6 +2,14 @@
 
 
 /* Navbar styles */
+
+body {
+  background-color: #F4E285; /* Western yellow */
+  color: #4B2E23; /* Optional: Dark brown text for contrast */
+  margin: 0;
+  padding: 0;
+}
+
 .navbar {
   background-color: #c19a6b !important; /* Saddle brown */
   border-bottom: 2px solid #4b2e23; /* Dark brown */

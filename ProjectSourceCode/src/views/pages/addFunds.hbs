@@ -1,14 +1,15 @@
-<form method="POST" action="/addFunds">
-    <div class="row mb-3 mt-3">
-        <label for="price" class="form-label col-12">Enter a Value</label>
+<form method="POST" action="/addFunds" class="mt-5">
+    <div class="row mb-3">
+        <label for="price" class="form-label col-12" style="color: #8B4513; font-weight: bold; text-transform: uppercase;">Enter a Value</label>
         <input 
             type="number" 
             class="form-control col-12 text-center" 
             id="deposit" 
             name="deposit"  
             min="0" 
-            required>
+            required
+            style="border: 2px solid #4B2E23; background-color: #F9F5E3; color: #4B2E23; font-weight: bold; text-align: center;">
     </div>
 
-    <button type="submit" class="btn btn-primary">Deposit</button>
+    <button type="submit" class="btn btn-primary" style="background-color: #4B2E23; border-color: #8B4513; color: #FFF; font-weight: bold; text-transform: uppercase;">Deposit</button>
 </form>
