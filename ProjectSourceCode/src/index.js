@@ -239,6 +239,7 @@ app.post('/createProfile', async (req, res) => {
     }
 
     await db.none('INSERT INTO profiles(userid, first_name, last_name, profile_bio) VALUES($1, $2, $3, $4)', [q3.userid, req.body.first_name, req.body.last_name, req.body.bio]);
+    await db.none('INSERT INTO Accounts(userid, balance) VALUES($1, $2)', [q3.userid, 100]);
     res.redirect('/login');
   } 
   catch (error) {
@@ -489,7 +490,9 @@ app.get("/message_page", async (req, res) => {
 app.get("/profile", async (req,res) =>{
   const q = "SELECT * FROM profiles p, users u WHERE p.userid = u.userid AND u.username = $1";
   const profileData = await db.any(q, req.session.user.username);
-  res.render('pages/profile', { profile: profileData[0] });
+  const account = await db.any('SELECT * FROM Accounts WHERE userid = $1', req.session.user.userid);
+  const acc = account[0];
+  res.render('pages/profile', {profile: profileData[0], acc});
 });
 
 app.get('/CreateBounty', (req, res) => {
@@ -631,6 +634,14 @@ app.post('/activeBounties', (req, res) => {
 app.get('/addFunds', (req, res) => {
   res.render('pages/addFunds')
 });
+app.post('/addFunds',async (req,res) => {
+  const id = req.session.user.userid
+  const account = await db.one('SELECT * FROM Accounts WHERE userid = $1', [id]);
+  const bal1 = parseInt(account.balance, 10);
+  const bal = bal1 + parseInt(req.body.deposit, 10);
+  db.none('UPDATE Accounts SET balance = $1 WHERE userid = $2', [bal, id]);
+  res.redirect('/home');
+})
 
 app.get("/yourCreatedBounties", (req, res) => {
   const u = req.session.user;
