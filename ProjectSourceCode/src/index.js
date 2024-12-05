@@ -460,18 +460,15 @@ app.post("/writeMessage", async (req, res) => {
         .status(404)
         .json({ error: "The receiver username does not exist." });
     }
-    
+
     await db.none(
       'INSERT INTO messages (receiver_name, sender_name, title, message_text) VALUES ($1, $2, $3, $4)',
       [receiver_name, sender_name, title, message_text]
     );
 
-    const notificationText = "You have recieved a new message.";
-    const link = '/message_page';
-    const type_of = "message"
     await db.none(
-      'INSERT INTO notifications (sender_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)',
-      [sender_name, title, notificationText, type_of, link]
+      "INSERT INTO notifications (receiver_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)",
+      [sender_name, title, "You have recieved a message", "message", "/message_page"]
     );
 
     res.status(201).json({ message: "Message written successfully" });
