@@ -30,12 +30,15 @@
                     <td>
                         <form method="POST" action="/deleteBounty" class="d-inline">
                             <input type="hidden" name="BountyID" value="{{job}}">
-
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete Bounty</button>
+                            {{#if is_complete}}
+                            <button type="submit" class="btn btn-outline-danger btn-sm"disabled>Complete</button>
+                            {{else}}
+                            <button type="submit" class="btn btn-outline-success btn-sm">Delete</button>
+                            {{/if}}
                         </form>
                     </td>
                 </tr>
-                
+
                 {{/each}}
             </tbody>
 

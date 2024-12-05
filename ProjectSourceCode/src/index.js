@@ -411,7 +411,7 @@ app.post('/reviewsByMe', (req, res) => {
 
 app.get("/home", (req, res) => {
 
-  const query = 'SELECT title, job_description, price, poster, job FROM Bounty ORDER BY job';
+  const query = 'SELECT title, job_description, price, poster, job, is_taken FROM Bounty ORDER BY job';
 
   db.any(query,)
   .then(Bounty => {
@@ -653,7 +653,7 @@ app.get("/yourCreatedBounties", (req, res) => {
   const u = req.session.user;
   const createdBy = u.username;
 
-  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE poster = $1';
+  const query = 'SELECT title, job_description, price, poster, job, is_complete FROM Bounty WHERE poster = $1';
 
   db.any(query,[createdBy])
   .then(Bounty => {
