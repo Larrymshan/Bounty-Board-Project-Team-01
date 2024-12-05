@@ -1,18 +1,9 @@
 /* General styles */
-body {
-  font-family: 'Playfair Display', serif; /* Use a vintage serif font */
-  background-color: #f4f1e9; /* Sandy beige background */
-  color: #4b2e23; /* Dark brown text */
-  margin: 0;
-  padding: 0;
-  background-image: url('/images/western-background.jpg'); /* Optional background image */
-  background-size: cover;
-  background-attachment: fixed;
-}
+
 
 /* Navbar styles */
 .navbar {
-  background-color: #c19a6b; /* Saddle brown */
+  background-color: #c19a6b !important; /* Saddle brown */
   border-bottom: 2px solid #4b2e23; /* Dark brown */
 }
 
