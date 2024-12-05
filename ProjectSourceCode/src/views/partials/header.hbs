@@ -132,26 +132,28 @@
           const title = document.getElementById("title").value;
           const message = document.getElementById("message").value;
 
-          try {
-            const response = await fetch("/writeMessage", {
+        try {
+              const response = await fetch("/writeMessage", {
               method: "POST",
               headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ receiver_name: receiver_name, title, message_text: message })
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ receiver_name, title, message_text: message }),
             });
-          if (response.ok) { 
-            alert("Message sent successfully!");
-            writeMessageForm.reset();
-            messagePopup.classList.add("hidden"); // Close the modal
-          } else {
-            const error = await response.json(); // Parse JSON response
-            alert(`Error: ${error.error || "Something went wrong"}`); // Show detailed error
-          }
+
+            if (response.ok) {
+             alert("Message sent successfully!");
+                writeMessageForm.reset();
+              messagePopup.classList.add("hidden"); // Close the modal
+            } else {
+              const error = await response.json();
+              alert(`Error: ${error.error || "Something went wrong"}`);
+            }
           } catch (err) {
             console.error("Error submitting message:", err);
             alert("An unexpected error occurred. Please try again.");
           }
+
         });
       } else {
         console.error("Message form elements not found.");
