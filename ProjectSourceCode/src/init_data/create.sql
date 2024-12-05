@@ -48,6 +48,7 @@ CREATE TABLE Bounty (
     price DECIMAL(10, 2) NOT NULL,
     poster VARCHAR(50) NOT NULL,
     is_taken BOOLEAN DEFAULT FALSE,
+    is_complete BOOLEAN DEFAULT FALSE,
     job SERIAL,
     taken_by VARCHAR(50)
 );

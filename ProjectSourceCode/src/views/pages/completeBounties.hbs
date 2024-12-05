@@ -17,8 +17,6 @@
                     <th>Job Description</th>
                     <th>Job Price</th>
                     <th>Poster</th>
-                    <th>Cancel Bounty</th>
-                    <th>Mark complete</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,20 +26,6 @@
                     <td>{{job_description}}</td>
                     <td>{{price}}</td>
                     <td>{{poster}}</td>
-                    <td>
-                        <form method="POST" action="/activeBounties" class="d-inline">
-                            <input type="hidden" name="BountyID" value="{{job}}">
-
-                            <button type="submit" class="btn btn-outline-secondary btn-sm">Cancel Bounty</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST" action="/markComplete" class="d-inline">
-                            <input type="hidden" name="BountyID" value="{{job}}">
-
-                            <button type="submit" class="btn btn-outline-success btn-sm">Mark Bounty Complete</button>
-                        </form>
-                    </td>
                 </tr>
                 {{/each}}
             </tbody>

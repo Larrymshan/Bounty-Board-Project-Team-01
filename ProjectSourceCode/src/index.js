@@ -603,7 +603,8 @@ app.get("/activeBounties", (req, res) => {
   const u = req.session.user;
   const taken= u.username;
 
-  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE taken_by = $1';
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE taken_by = $1 AND is_complete = false';
+
 
   db.any(query,[taken])
   .then(Bounty => {
@@ -662,6 +663,47 @@ app.post('/deleteBounty', (req, res) => {
     });
 });
 
+app.post('/markComplete', (req, res) => {
+  const BountyID = req.body.BountyID;
+  console.log('Received request body:', req.body);
+
+  const query = 'UPDATE Bounty SET is_complete = TRUE WHERE BountyID = $1';
+
+  db.none(query, [BountyID])
+    .then(() => {
+      const current = req.session.user.username;
+      res.render('pages/activeBounties')
+
+    })
+    .catch(error => {
+      console.error('Error updating the review:', error);
+      res.status(500).send('An error occurred while marking complete.');
+    });
+});
+
+app.get("/completeBounties", (req, res) => {
+  const u = req.session.user;
+  
+  // Ensure `u` exists and has a username
+  if (!u || !u.username) {
+    return res.status(401).send("User not authenticated.");
+  }
+
+  const createdBy = u.username;
+
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE poster = $1 AND is_complete = true';
+
+  db.any(query, [createdBy])
+    .then(Bounty => {
+      res.render('pages/completeBounties', {
+        Bounty: Bounty
+      });
+    })
+    .catch(error => {
+      console.error("Error querying complete bounties:", error);
+      res.status(500).send("Error retrieving complete bounties.");
+    });
+});
 
 // start the server
 const server = app.listen(3000);
