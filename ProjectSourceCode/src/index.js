@@ -352,7 +352,7 @@ app.post('/writeReview', (req, res) => {
   const reviewer = req.session.user.username;
 
   const query = `INSERT INTO reviews (reviewer_name, user_reviewed, rating, review_text) VALUES ($1, $2, $3, $4)`;
-  const noti_q = 'INSERT INTO notifications (sender_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)';
+  const noti_q = 'INSERT INTO notifications (receiver_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)';
 
   db.none(query, [reviewer, username, rating, review_text])
   .then(() => {
