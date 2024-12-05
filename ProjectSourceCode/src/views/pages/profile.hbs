@@ -9,13 +9,24 @@
             </tr>
         </thead>
         <tbody>
-            {{#with profile}}
-            <tr>
-                <td>{{first_name}}</td>  
-                <td>{{last_name}}</td>  
-                <td>{{profile_bio}}</td>     
-            </tr>
+            {{#with profile}} 
+                <tr>
+                    <td>{{first_name}}</td>  
+                    <td>{{last_name}}</td>  
+                    <td>{{profile_bio}}</td>
+                </tr>
             {{/with}}
+
+            {{#with acc}}
+            <thead>
+                <tr>
+                    <th>Balance</th>
+                </tr>
+            </thead>
+                <tr>
+                    <td>{{balance}}</td>
+                </tr>
+            {{/with}} 
         </tbody>
     </table>
 </div>
