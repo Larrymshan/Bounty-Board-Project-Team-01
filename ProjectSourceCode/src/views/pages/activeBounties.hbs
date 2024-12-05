@@ -1,0 +1,51 @@
+<div class="container d-flex justify-content-center text-center" style=" align-items: flex-start; padding-top: 20px;">
+    <div>
+        <h1>Welcome to Bounty Board</h1>
+        <p>The best place to get all of the tasks you don't want to do done for you!</p>
+    </div>
+</div>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Bounty Dashboard</h1>
+    <p class="text-center mb-4">These are your active bounties you need to complete.</p>
+    <a class="btn btn-primary" href="/home">Back to bounty home page</a>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Job Title</th>
+                    <th>Job Description</th>
+                    <th>Job Price</th>
+                    <th>Poster</th>
+                    <th>Cancel Bounty</th>
+                    <th>Mark complete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each Bounty}}
+                <tr>
+                    <td>{{title}}</td>
+                    <td>{{job_description}}</td>
+                    <td>{{price}}</td>
+                    <td>{{poster}}</td>
+                    <td>
+                        <form method="POST" action="/activeBounties" class="d-inline">
+                            <input type="hidden" name="BountyID" value="{{job}}">
+
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Cancel Bounty</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form method="POST" action="/markComplete" class="d-inline">
+                            <input type="hidden" name="BountyID" value="{{job}}">
+
+                            <button type="submit" class="btn btn-outline-success btn-sm">Mark Bounty Complete</button>
+                        </form>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+
+        </table>
+    </div>
+</div>

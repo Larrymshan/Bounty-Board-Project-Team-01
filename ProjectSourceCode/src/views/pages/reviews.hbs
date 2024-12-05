@@ -24,7 +24,11 @@
                     <td>{{rating}}</td>
                     <td>
                         <form method="POST" action="/report" class="d-inline">
-                            <input type="hidden" name="review_id" value="{{review_id}}">
+                            <input type="hidden" name="review_id" value="{{review_num}}">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Report</button>
+                        </form>
+                        <form method="POST" action="/reviews" class="d-inline">
+                            <input type="hidden" name="review_id" value="{{review_num}}">
                             <button type="submit" class="btn btn-outline-danger btn-sm">Report</button>
                         </form>
                     </td>

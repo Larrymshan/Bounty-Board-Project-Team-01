@@ -28,7 +28,8 @@ CREATE TABLE reviews (
     reviewer_name VARCHAR(50) NOT NULL,
     rating INT NOT NULL,
     user_reviewed TEXT NOT NULL,
-    flagged BOOLEAN DEFAULT FALSE
+    flagged BOOLEAN DEFAULT FALSE,
+    review_num SERIAL
 );
 
 DROP TABLE IF EXiSTS messages;
@@ -49,4 +50,32 @@ CREATE TABLE notifications (
     link TEXT NOT NULL,
     is_read BOOLEAN DEFAULT FALSE,
     time_stamp TIMESTAMP DEfAULT NOW()
+);
+
+DROP TABLE IF EXISTS Bounty;
+CREATE TABLE Bounty (
+    BountyID SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
+    job_description TEXT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    poster VARCHAR(50) NOT NULL,
+    is_taken BOOLEAN DEFAULT FALSE,
+    is_complete BOOLEAN DEFAULT FALSE,
+    job SERIAL,
+    taken_by VARCHAR(50)
+);
+
+CREATE TABLE Accounts (
+    account_id SERIAL PRIMARY KEY, 
+    userid INT NOT NULL,
+    balance NUMERIC(10, 2) NOT NULL DEFAULT 100,
+    FOREIGN KEY (userid) REFERENCES users(userid) 
+);
+
+CREATE TABLE Transactions (
+    transaction_id SERIAL PRIMARY KEY, 
+    account_id INT NOT NULL,    
+    transaction_type VARCHAR(50) NOT NULL,
+    amount NUMERIC(10, 2) NOT NULL,
+    FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
 );

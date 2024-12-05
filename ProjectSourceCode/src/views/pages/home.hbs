@@ -1,4 +1,88 @@
-<div class="container">
-  <h1>Welcome to the Home Page</h1>
-  <p>Here you can create a new post by clicking the button in the navigation bar.</p>
+<div class="container d-flex justify-content-center text-center" style=" align-items: flex-start; padding-top: 20px;">
+  <div>
+    <h1>Welcome to Bounty Board</h1>
+    <p>The best place to get all of the tasks you don't want to do done for you!</p>
+  </div>
 </div>
+<div class="container mt-5">
+  <h1 class="text-center mb-4">Bounty Dashboard</h1>
+  <h3 >Bounty Filters</h3>
+  <a class="btn btn-primary" href="/activeBounties">Accepted Bounties</a>
+  <a class="btn btn-primary" href="/yourCreatedBounties">Bounties Created by You</a>
+  <a class="btn btn-primary" href="/completeBounties">Bounties Completed by You</a>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">Job Title</th>
+          <th scope="col">Job Description</th>
+          <th scope="col">Job Price</th>
+          <th scope="col">Poster</th>
+          <th scope="col">Take Bounty</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each Bounty}}
+        <tr>
+          <td>{{title}}</td>
+          <td>{{job_description}}</td>
+          <td>{{price}}</td>
+          <td>{{poster}}</td>
+          <td>
+            <form method="POST" action="/home" class="d-inline">
+              <input type="hidden" name="BountyID" value="{{job}}">
+
+              <button type="submit" class="btn btn-outline-success btn-sm" {{#if is_taken}}disabled{{/if}}>
+                {{#if is_taken}}Taken{{else}}Take Bounty{{/if}}
+              </button>
+            </form>
+
+
+          </td>
+        </tr>
+        {{/each}}
+      </tbody>
+
+    </table>
+  </div>
+
+  {{#if Bounty.length}}
+  <p class="text-muted text-end mt-3">Total Bounties: {{Bounty.length}}</p>
+  {{else}}
+  <p class="text-center text-muted mt-4">No bounties found. Come back later or add a bounty now!</p>
+  {{/if}}
+</div>
+
+
+<!-- this was a test to see why buttons were not working on table I will delete it later
+<div class="ms-5 me-5">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Job Title</th>
+        <th>Job Description</th>
+        <th>Job Price</th>
+        <th>Poster</th>
+        <th>Take Bounty</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each Bounty}}
+      <tr>
+        <td>{{title}}</td>
+          <td>{{job_description}}</td>
+          <td>{{price}}</td>
+          <td>{{poster}}</td>
+          <td>
+          <form method="POST" action="/home">
+            <input type="hidden" name="BountyID" value="{{job}}">
+            <button type="submit" class="btn btn-outline-success">Add</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+-->

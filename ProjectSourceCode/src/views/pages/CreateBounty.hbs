@@ -1,0 +1,28 @@
+<form method="POST" action="/CreateBounty" class="container">
+    <div class="row mb-3">
+        <label for="title" class="form-label col-12">Title of Job</label>
+        <input type="text" class="form-control col-12" id="title" name="title" required>
+    </div>
+
+    <div class="row mb-3">
+        <label for="desc" class="form-label col-12">Description of Job</label>
+        <textarea class="form-control col-12" id="desc" name="job_description" rows="4" required></textarea>
+    </div>
+
+    <div class="row mb-3 mt-3">
+        <label for="price" class="form-label col-12">Enter a Value</label>
+        <input 
+            type="number" 
+            class="form-control col-12 text-center" 
+            id="price" 
+            name="price" 
+            value="0" 
+            min="0" 
+            step="1" 
+            required>
+    </div>
+
+    <div class="row mt-3">
+        <button type="submit" class="btn btn-primary col-12">Create Bounty</button>
+    </div>
+</form>
