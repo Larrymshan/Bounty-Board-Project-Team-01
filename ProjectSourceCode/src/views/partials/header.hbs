@@ -33,8 +33,8 @@
   </div>
   <form id="writeMessageForm">
     <div class="form-field">
-      <label for="reciever_name">To (Receiver's Username):</label>
-      <input type="text" id="reciever_name" name="reciever_name" required maxlength="50">
+      <label for="receiver">To (Receiver's Username):</label>
+      <input type="text" id="receiver" name="receiver" required maxlength="50">
     </div>
     <div class="form-field">
       <label for="title">Title: (Max 50 characters)</label>
@@ -128,7 +128,7 @@
         writeMessageForm.addEventListener("submit", async (event) => {
           event.preventDefault();
 
-          const reciever_name = document.getElementById("reciever_name").value;
+          const receiver_name = document.getElementById("receiver").value;
           const title = document.getElementById("title").value;
           const message = document.getElementById("message").value;
 
@@ -138,7 +138,7 @@
               headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ reciever_name, title, message_text: message }),
+              body: JSON.stringify({ receiver_name: receiver_name, title, message_text: message })
             });
           if (response.ok) { 
             alert("Message sent successfully!");

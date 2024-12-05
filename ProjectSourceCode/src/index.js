@@ -352,17 +352,25 @@ app.post('/writeReview', (req, res) => {
   const reviewer = req.session.user.username;
 
   const query = `INSERT INTO reviews (reviewer_name, user_reviewed, rating, review_text) VALUES ($1, $2, $3, $4)`;
-  
+  const noti_q = 'INSERT INTO notifications (sender_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)';
+
   db.none(query, [reviewer, username, rating, review_text])
   .then(() => {
     console.log('Review successfully added');
     res.redirect('/reviewsByMe');
+
+    const notificationText = "You have a new review.";
+    const link = "/reviews";
+    const type_of = "review";
+
+    return db.none(noti_q, [username, "New Review", notificationText, type_of, link]);
   })
   .catch(error => {
     console.error('Error submitting review:', error);
     res.status(500).send('An error occurred while submitting the review.');
   });
 });
+
 
 
 app.get('/reviewsByMe', (req, res) => {
@@ -406,7 +414,7 @@ app.post('/reviewsByMe', (req, res) => {
 
 app.get("/home", (req, res) => {
 
-  const query = 'SELECT title, job_description, price, poster, job FROM Bounty ORDER BY job';
+  const query = 'SELECT title, job_description, price, poster, job, is_taken FROM Bounty ORDER BY job';
 
   db.any(query,)
   .then(Bounty => {
@@ -423,9 +431,14 @@ app.get("/home", (req, res) => {
 
 //Write Messages
 app.post("/writeMessage", async (req, res) => {
-  const sender_name = req.session.username;
-  const { reciever_name, title, message_text } = req.body;
-  if (!reciever_name || reciever_name.length > 50) {
+  if(!req.session.user)
+  {
+    console.log('User not logged in to view reviews');
+    return res.redirect('/login');
+  }
+  const sender_name = req.session.user.username;
+  const { receiver_name, title, message_text } = req.body;
+  if (!receiver_name || receiver_name.length > 50) {
     return res.status(400).json({ error: "Receiver name is required and should not exceed 50 characters." });
   }
   if (!title || title.length > 50) {
@@ -437,30 +450,26 @@ app.post("/writeMessage", async (req, res) => {
 
   try {
     await db.none(
-      'INSERT INTO messages (reciever_name, sender_name, title, message_text) VALUES ($1, $2, $3, $4)',
-      [reciever_name, sender_name, title, message_text]
+      'INSERT INTO messages (receiver_name, sender_name, title, message_text) VALUES ($1, $2, $3, $4)',
+      [receiver_name, sender_name, title, message_text]
     );
 
-    /*const notificationText = "You have recieved a new message.";
+    const notificationText = "You have recieved a new message.";
     const link = '/message_page';
+    const type_of = "message"
     await db.none(
-      'INSERT INTO notifications (sender_name, title, descript, '
-    );*/
+      'INSERT INTO notifications (sender_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)',
+      [sender_name, title, notificationText, type_of, link]
+    );
 
     res.status(201).json({ message: "Message written successfully" });
   } catch (error) {
-    if (error.code === '23505') {
-      res.status(400).json({ error: "A message with this title already exists for this receiver" });
-    } else {
-      console.error("Error occurred:", error);
-      res.status(500).json({ error: "An internal server error occurred" });
-    }
   }
 });
 
 //message page
 app.get("/message_page", async (req, res) => {
-  const username = req.session.username;
+  const username = req.session.user.username;
 
   if (!req.session.user) {
     console.log('User not logged in to view messages');
@@ -468,17 +477,18 @@ app.get("/message_page", async (req, res) => {
   }
 
   try {
-    const recievedMessages = await db.any(
-      'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE reciever_name = $1',
+    const receivedMessages = await db.any(
+      'SELECT receiver_name, sender_name, title, message_text FROM messages WHERE receiver_name = $1',
       [username]
     );
     const sentMessages = await db.any(
-      'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE sender_name = $1',
+      'SELECT receiver_name, sender_name, title, message_text FROM messages WHERE sender_name = $1',
       [username]
     );
+
     res.render("pages/message_page", {
       username,
-      recievedMessages,
+      receivedMessages,
       sentMessages
     });
 
@@ -606,7 +616,8 @@ app.get("/activeBounties", (req, res) => {
   const u = req.session.user;
   const taken= u.username;
 
-  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE taken_by = $1';
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE taken_by = $1 AND is_complete = false';
+
 
   db.any(query,[taken])
   .then(Bounty => {
@@ -639,7 +650,7 @@ app.get("/yourCreatedBounties", (req, res) => {
   const u = req.session.user;
   const createdBy = u.username;
 
-  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE poster = $1';
+  const query = 'SELECT title, job_description, price, poster, job, is_complete FROM Bounty WHERE poster = $1';
 
   db.any(query,[createdBy])
   .then(Bounty => {
@@ -665,6 +676,73 @@ app.post('/deleteBounty', (req, res) => {
     });
 });
 
+app.post('/markComplete', (req, res) => {
+  const BountyID = req.body.BountyID;
+  console.log('Received request body:', req.body);
+
+  const query = 'UPDATE Bounty SET is_complete = TRUE WHERE BountyID = $1';
+
+  db.none(query, [BountyID])
+    .then(() => {
+      const current = req.session.user.username;
+      res.render('pages/activeBounties')
+
+    })
+    .catch(error => {
+      console.error('Error updating the review:', error);
+      res.status(500).send('An error occurred while marking complete.');
+    });
+});
+
+app.get("/completeBounties", (req, res) => {
+  const u = req.session.user;
+  
+  // Ensure `u` exists and has a username
+  if (!u || !u.username) {
+    return res.status(401).send("User not authenticated.");
+  }
+
+  const createdBy = u.username;
+
+  const query = 'SELECT title, job_description, price, poster, job FROM Bounty WHERE poster = $1 AND is_complete = true';
+
+  db.any(query, [createdBy])
+    .then(Bounty => {
+      res.render('pages/completeBounties', {
+        Bounty: Bounty
+      });
+    })
+    .catch(error => {
+      console.error("Error querying complete bounties:", error);
+      res.status(500).send("Error retrieving complete bounties.");
+    });
+});
+
+app.get("/notification_page", async (req, res) => {
+
+  if(!req.session.user)
+  {
+    console.log("User not logged in");
+    return res.redirect("/login");
+  }
+
+  const username = req.session.username;
+
+  try{
+    const recieved_notifications = await db.any(
+      "SELECT receiver_name, title, descript, noti_type, link, time_stamp FROM notifications WHERE receiver_name = $1 ORDER BY time_stamp DESC",
+      [username]
+    );
+
+    res.render("pages/notification_page", {
+      username,
+      recieved_notifications
+    });
+  }catch(error){
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "An internal server error occurred" });
+  }
+});
 
 // start the server
 const server = app.listen(3000);

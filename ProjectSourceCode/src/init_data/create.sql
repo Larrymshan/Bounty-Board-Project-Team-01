@@ -3,7 +3,7 @@ CREATE TABLE users (
     userid SERIAL PRIMARY KEY,
     username VARCHAR(50),
     password CHAR(60) NOT NULL
-    );
+);
 
 DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles(
@@ -31,13 +31,25 @@ CREATE TABLE reviews (
     flagged BOOLEAN DEFAULT FALSE,
     review_num SERIAL
 );
-   
+
+DROP TABLE IF EXiSTS messages;
 CREATE TABLE messages (
-    reciever_name VARCHAR(50),
+    receiver_name VARCHAR(50),
     sender_name VARCHAR(50),
     title VARCHAR(50),
     message_text TEXT NOT NULL,
-    PRIMARY KEY (reciever_name, title)
+    PRIMARY KEY (receiver_name, title)
+);
+
+DROP TABLE IF EXiSTS notifications;
+CREATE TABLE notifications (
+    receiver_name VARCHAR(50),
+    title VARCHAR(50),
+    descript TEXT NOT NULL,
+    noti_type VARCHAR(50),
+    link TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    time_stamp TIMESTAMP DEfAULT NOW()
 );
 
 DROP TABLE IF EXISTS Bounty;
@@ -48,6 +60,7 @@ CREATE TABLE Bounty (
     price DECIMAL(10, 2) NOT NULL,
     poster VARCHAR(50) NOT NULL,
     is_taken BOOLEAN DEFAULT FALSE,
+    is_complete BOOLEAN DEFAULT FALSE,
     job SERIAL,
     taken_by VARCHAR(50)
 );

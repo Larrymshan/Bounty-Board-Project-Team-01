@@ -17,7 +17,6 @@
                     <th>Job Description</th>
                     <th>Job Price</th>
                     <th>Poster</th>
-                    <th>Cancel Bounty</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,18 +26,7 @@
                     <td>{{job_description}}</td>
                     <td>{{price}}</td>
                     <td>{{poster}}</td>
-                    <td>
-                        <form method="POST" action="/deleteBounty" class="d-inline">
-                            <input type="hidden" name="BountyID" value="{{job}}">
-                            {{#if is_complete}}
-                            <button type="submit" class="btn btn-outline-danger btn-sm"disabled>Complete</button>
-                            {{else}}
-                            <button type="submit" class="btn btn-outline-success btn-sm">Delete</button>
-                            {{/if}}
-                        </form>
-                    </td>
                 </tr>
-
                 {{/each}}
             </tbody>
 

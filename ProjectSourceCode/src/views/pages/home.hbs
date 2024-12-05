@@ -6,9 +6,10 @@
 </div>
 <div class="container mt-5">
   <h1 class="text-center mb-4">Bounty Dashboard</h1>
-  <h3 >Bounty Filters</h3>
+  <h3>Bounty Filters</h3>
   <a class="btn btn-primary" href="/activeBounties">Accepted Bounties</a>
   <a class="btn btn-primary" href="/yourCreatedBounties">Bounties Created by You</a>
+  <a class="btn btn-primary" href="/completeBounties">Bounties Completed by You</a>
 
   <div class="table-responsive">
     <table class="table table-striped table-hover align-middle">
@@ -32,12 +33,12 @@
             <form method="POST" action="/home" class="d-inline">
               <input type="hidden" name="BountyID" value="{{job}}">
 
-              <button type="submit" class="btn btn-outline-success btn-sm" {{#if is_taken}}disabled{{/if}}>
-                {{#if is_taken}}Taken{{else}}Take Bounty{{/if}}
-              </button>
+              {{#if is_taken}}
+              <button type="submit" class="btn btn-outline-success btn-sm" disabled>Taken</button>
+              {{else}}
+              <button type="submit" class="btn btn-outline-success btn-sm">Take Bounty</button>
+              {{/if}}
             </form>
-
-
           </td>
         </tr>
         {{/each}}
