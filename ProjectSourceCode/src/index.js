@@ -275,14 +275,34 @@ app.post('/writeReview', (req, res) => {
   const reviewer = req.session.user.username;
 
   const query = `INSERT INTO reviews (reviewer_name, user_reviewed, rating, review_text) VALUES ($1, $2, $3, $4)`;
-  
+  const noti_q = 'INSERT INTO notifications (sender_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)';
+
   db.none(query, [reviewer, username, rating, reviewText])
-  .then(() => {
+    .then(() => {
+      console.log('Review successfully added');
+      res.redirect('/reviewsByMe');
+    })
+    .catch(error => {
+      console.error('Error submitting review:', error);
+      res.status(500).send('An error occurred while submitting the review.');
+    });
+
+    db.none(noti_q, [reviewer, username, rating, reviewText])
+    .then(() => {
     console.log('Review successfully added');
+
+    const notificationText = "You have a new review.";
+    const link = "/review"; 
+    const type_of = "review"; 
+
+    return db.none(notificationQuery, [username, "New Review", notificationText, type_of, link]);
+  })
+  .then(() => {
+    console.log('Notification successfully added');
     res.redirect('/reviewsByMe');
   })
   .catch(error => {
-    console.error('Error submitting review:', error);
+    console.error('Error submitting review or notification:', error);
     res.status(500).send('An error occurred while submitting the review.');
   });
 });
@@ -349,9 +369,14 @@ app.get("/home", (req, res) => {
 
 //Write Messages
 app.post("/writeMessage", async (req, res) => {
-  const sender_name = req.session.username;
-  const { reciever_name, title, message_text } = req.body;
-  if (!reciever_name || reciever_name.length > 50) {
+  if(!req.session.user)
+  {
+    console.log('User not logged in to view reviews');
+    return res.redirect('/login');
+  }
+  const sender_name = req.session.user.username;
+  const { receiver_name, title, message_text } = req.body;
+  if (!receiver_name || receiver_name.length > 50) {
     return res.status(400).json({ error: "Receiver name is required and should not exceed 50 characters." });
   }
   if (!title || title.length > 50) {
@@ -363,15 +388,17 @@ app.post("/writeMessage", async (req, res) => {
 
   try {
     await db.none(
-      'INSERT INTO messages (reciever_name, sender_name, title, message_text) VALUES ($1, $2, $3, $4)',
-      [reciever_name, sender_name, title, message_text]
+      'INSERT INTO messages (receiver_name, sender_name, title, message_text) VALUES ($1, $2, $3, $4)',
+      [receiver_name, sender_name, title, message_text]
     );
 
-    /*const notificationText = "You have recieved a new message.";
+    const notificationText = "You have recieved a new message.";
     const link = '/message_page';
+    const type_of = "message"
     await db.none(
-      'INSERT INTO notifications (sender_name, title, descript, '
-    );*/
+      'INSERT INTO notifications (sender_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)',
+      [sender_name, title, notificationText, type_of, link]
+    );
 
     res.status(201).json({ message: "Message written successfully" });
   } catch (error) {
@@ -386,7 +413,7 @@ app.post("/writeMessage", async (req, res) => {
 
 //message page
 app.get("/message_page", async (req, res) => {
-  const username = req.session.username;
+  const username = req.session.user.username;
 
   if (!req.session.user) {
     console.log('User not logged in to view messages');
@@ -394,17 +421,18 @@ app.get("/message_page", async (req, res) => {
   }
 
   try {
-    const recievedMessages = await db.any(
-      'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE reciever_name = $1',
+    const receivedMessages = await db.any(
+      'SELECT receiver_name, sender_name, title, message_text FROM messages WHERE receiver_name = $1',
       [username]
     );
     const sentMessages = await db.any(
-      'SELECT reciever_name, sender_name, title, message_text FROM messages WHERE sender_name = $1',
+      'SELECT receiver_name, sender_name, title, message_text FROM messages WHERE sender_name = $1',
       [username]
     );
+
     res.render("pages/message_page", {
       username,
-      recievedMessages,
+      receivedMessages,
       sentMessages
     });
 

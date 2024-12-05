@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Notifications</title>
+  </head>
+<body>
+    <h1>Notifications</h1>
+    {{#if notifications.length}}
+      <ul>
+        {{#each notifications}}
+          <li>
+            {{#if (eq notification_type "message")}}
+              <a href="/message/{{reference_id}}" class="{{#unless is_read}}unread{{/unless}}">
+                You have a new message.
+              </a>
+            {{/if}}
+
+            {{#if (eq notification_type "posting")}}
+              <a href="/posting/{{reference_id}}" class="{{#unless is_read}}unread{{/unless}}">
+                A new posting has opened.
+              </a>
+            {{/if}}
+
+            {{#if (eq notification_type "acceptance")}}
+              <a href="/posting/{{reference_id}}" class="{{#unless is_read}}unread{{/unless}}">
+                Someone accepted your posting.
+              </a>
+            {{/if}}
+          </li>
+        {{/each}}
+      </ul>
+    {{else}}
+      <p>No notifications yet.</p>
+    {{/if}}
+</body>

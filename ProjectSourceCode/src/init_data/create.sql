@@ -3,7 +3,7 @@ CREATE TABLE users (
     userid SERIAL PRIMARY KEY,
     username VARCHAR(50),
     password CHAR(60) NOT NULL
-    );
+);
 
 DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles(
@@ -30,11 +30,23 @@ CREATE TABLE reviews (
     user_reviewed TEXT NOT NULL,
     flagged BOOLEAN DEFAULT FALSE
 );
-   
+
+DROP TABLE IF EXiSTS messages;
 CREATE TABLE messages (
-    reciever_name VARCHAR(50),
+    receiver_name VARCHAR(50),
     sender_name VARCHAR(50),
     title VARCHAR(50),
     message_text TEXT NOT NULL,
-    PRIMARY KEY (reciever_name, title)
+    PRIMARY KEY (receiver_name, title)
+);
+
+DROP TABLE IF EXiSTS notifications;
+CREATE TABLE notifications (
+    receiver_name VARCHAR(50),
+    title VARCHAR(50),
+    descript TEXT NOT NULL,
+    noti_type VARCHAR(50),
+    link TEXT NOT NULL,
+    is_read BOOLEAN DEFAULT FALSE,
+    time_stamp TIMESTAMP DEfAULT NOW()
 );

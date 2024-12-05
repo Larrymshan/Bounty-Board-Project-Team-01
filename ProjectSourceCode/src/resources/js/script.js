@@ -15,4 +15,8 @@ document.addEventListener('DOMContentLoaded', function () {
       console.error('Button or form container not found.');
     }
   });
+
+document.addEventListener(
+  
+);
   
