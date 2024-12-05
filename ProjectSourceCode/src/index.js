@@ -528,7 +528,7 @@ app.get('/CreateBounty', (req, res) => {
 
 });
 
-app.post('/CreateBounty', (req, res) => {
+app.post('/CreateBounty', async (req, res) => {
   if (!req.session.user) {
     console.log('User not logged in to submit a review');
     return res.redirect('/login');
@@ -538,6 +538,11 @@ app.post('/CreateBounty', (req, res) => {
   const poster = req.session.user.username;
 
   console.log(req.body); 
+  //balance update
+  const account = await db.one('SELECT * FROM Accounts WHERE userid = $1', [req.session.user.userid]);
+  const bal1 = parseInt(account.balance, 10);
+  const bal = bal1 - parseInt(price, 10);
+  db.none('UPDATE Accounts SET balance = $1 WHERE userid = $2', [bal, req.session.user.userid]);
 
   const query = `INSERT INTO Bounty (title, job_description, price, poster) VALUES ($1, $2, $3, $4)`;
   
@@ -707,12 +712,35 @@ app.post('/markComplete', (req, res) => {
   console.log('Received request body:', req.body);
 
   const query = 'UPDATE Bounty SET is_complete = TRUE WHERE BountyID = $1';
+  const user = req.session.username;
+  const noti_q = `INSERT INTO notifications (receiver_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)`;
+
+  /*
+  const noti_q = 'INSERT INTO notifications (receiver_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)';
+
+  db.none(query, [reviewer, username, rating, review_text])
+  .then(() => {
+    console.log('Review successfully added');
+    res.redirect('/reviewsByMe');
+
+    const notificationText = "You have a new review.";
+    const link = "/reviews";
+    const type_of = "review";
+
+    return db.none(noti_q, [username, "New Review", notificationText, type_of, link]);
+  })
+  .catch(error => {
+    console.error('Error submitting review:', error);
+    res.status(500).send('An error occurred while submitting the review.');
+  });
+  */
 
   db.none(query, [BountyID])
     .then(() => {
       const current = req.session.user.username;
       res.render('pages/activeBounties')
 
+      return db.none(noti_q, [BountyID, "Bounty Completed", "", "Bounty", "/board.hbs"])
     })
     .catch(error => {
       console.error('Error updating the review:', error);
