@@ -351,10 +351,16 @@ app.post('/writeReview', (req, res) => {
   const query = `INSERT INTO reviews (reviewer_name, user_reviewed, rating, review_text) VALUES ($1, $2, $3, $4)`;
   const noti_q = 'INSERT INTO notifications (sender_name, title, descript, noti_type, link) VALUES ($1, $2, $3, $4, $5)';
 
-  db.none(query, [reviewer, username, rating, reviewText])
+  db.none(query, [reviewer, username, rating, review_text])
   .then(() => {
     console.log('Review successfully added');
     res.redirect('/reviewsByMe');
+
+    const notificationText = "You have a new review.";
+    const link = "/reviews";
+    const type_of = "review";
+
+    return db.none(noti_q, [username, "New Review", notificationText, type_of, link]);
   })
   .catch(error => {
     console.error('Error submitting review:', error);
@@ -713,6 +719,32 @@ app.get("/completeBounties", (req, res) => {
       console.error("Error querying complete bounties:", error);
       res.status(500).send("Error retrieving complete bounties.");
     });
+});
+
+app.get("/notification_page", async (req, res) => {
+
+  if(!req.session.user)
+  {
+    console.log("User not logged in");
+    return res.redirect("/login");
+  }
+
+  const username = req.session.username;
+
+  try{
+    const recieved_notifications = await db.any(
+      "SELECT receiver_name, title, descript, noti_type, link, time_stamp FROM notifications WHERE receiver_name = $1 ORDER BY time_stamp DESC",
+      [username]
+    );
+
+    res.render("pages/notification_page", {
+      username,
+      recieved_notifications
+    });
+  }catch(error){
+    console.error("Error fetching notifications:", error);
+    res.status(500).json({ error: "An internal server error occurred" });
+  }
 });
 
 // start the server
