@@ -64,18 +64,19 @@ CREATE TABLE Bounty (
     job SERIAL,
     taken_by VARCHAR(50)
 );
-
+DROP TABLE IF EXISTS Accounts;
 CREATE TABLE Accounts (
     account_id SERIAL PRIMARY KEY, 
     userid INT NOT NULL,
-    balance NUMERIC(10, 2) NOT NULL DEFAULT 100,
+    balance DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (userid) REFERENCES users(userid) 
 );
 
-CREATE TABLE Transactions (
-    transaction_id SERIAL PRIMARY KEY, 
-    account_id INT NOT NULL,    
-    transaction_type VARCHAR(50) NOT NULL,
-    amount NUMERIC(10, 2) NOT NULL,
-    FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
-);
+
+-- CREATE TABLE Transactions (
+--     transaction_id SERIAL PRIMARY KEY, 
+--     account_id INT NOT NULL,    
+--     transaction_type VARCHAR(50) NOT NULL,
+--     amount NUMERIC(10, 2) NOT NULL,
+--     FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
+-- );
