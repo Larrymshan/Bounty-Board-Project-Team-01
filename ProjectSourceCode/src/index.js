@@ -449,6 +449,18 @@ app.post("/writeMessage", async (req, res) => {
   }
 
   try {
+
+    const userExists = await db.oneOrNone(
+      "SELECT username FROM users WHERE username = $1",
+      [receiver_name]
+    );
+
+    if (!userExists) {
+      return res
+        .status(404)
+        .json({ error: "The receiver username does not exist." });
+    }
+    
     await db.none(
       'INSERT INTO messages (receiver_name, sender_name, title, message_text) VALUES ($1, $2, $3, $4)',
       [receiver_name, sender_name, title, message_text]
