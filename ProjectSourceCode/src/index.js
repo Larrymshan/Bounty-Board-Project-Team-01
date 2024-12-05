@@ -691,8 +691,15 @@ app.get("/yourCreatedBounties", (req, res) => {
   })
 });
 
-app.post('/deleteBounty', (req, res) => {
+app.post('/deleteBounty', async(req, res) => {
   const BountyID = parseInt(req.body.BountyID);
+   //balance update
+   const account = await db.one('SELECT * FROM Accounts WHERE userid = $1', [req.session.user.userid]);
+   const bounty = await db.one('SELECT * FROM Bounty WHERE BountyID = $1', [req.body.BountyID]);
+   const bal1 = parseInt(account.balance, 10);
+   const bal = bal1 + parseInt(bounty.price, 10);
+   db.none('UPDATE Accounts SET balance = $1 WHERE userid = $2', [bal, req.session.user.userid]);
+ 
   console.log('Received ReviewNum:', BountyID);
 
   const del = `DELETE FROM Bounty WHERE job = $1`;
@@ -707,9 +714,16 @@ app.post('/deleteBounty', (req, res) => {
     });
 });
 
-app.post('/markComplete', (req, res) => {
+app.post('/markComplete', async(req, res) => {
   const BountyID = req.body.BountyID;
   console.log('Received request body:', req.body);
+
+  
+  const account = await db.one('SELECT * FROM Accounts WHERE userid = $1', [req.session.user.userid]);
+  const bounty = await db.one('SELECT * FROM Bounty WHERE BountyID = $1', [req.body.BountyID]);
+  const bal1 = parseInt(account.balance, 10);
+  const bal = bal1 + parseInt(bounty.price, 10);
+  db.none('UPDATE Accounts SET balance = $1 WHERE userid = $2', [bal, req.session.user.userid]);
 
   const query = 'UPDATE Bounty SET is_complete = TRUE WHERE BountyID = $1';
   const user = req.session.username;
