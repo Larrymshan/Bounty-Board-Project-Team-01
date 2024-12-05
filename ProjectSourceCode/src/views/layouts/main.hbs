@@ -1,23 +1,41 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="" />
-  <!-- Link to Bootstrap -->
+  <meta name="description" content="Western-themed application" />
+
+  <!-- Link to Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Link to Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
   <!-- Link to Custom Styles -->
-  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="../../resources/css/style.css" />
+
+  <style>
+    body {
+      background-color: #F4E285; /* Western yellow background */
+      color: #4B2E23; /* Dark brown text */
+      font-family: 'Playfair Display', serif; /* Western-style font */
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 </head>
 
-
 <body>
-    {{!-- head partial --}}
-    {{>header}}
+  {{!-- Head partial --}}
+  {{> header}}
 
-    {{!-- body --}}
-    {{{body}}}
+  {{!-- Body --}}
+  {{{body}}}
 
-    {{!-- footer partial --}}
-    {{> footer}}
+  {{!-- Footer partial --}}
+  {{> footer}}
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-vMkE9m87xTB6r36fw9uH/h/05N96PhH0kHk5sJ5TR9MwoC/RpTSs03l+KbxAjk0J"
+    crossorigin="anonymous"></script>
 </body>

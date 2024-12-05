@@ -1,14 +1,14 @@
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Reviews for You</h1>
+    <h1 class="text-center mb-4" style="color: #8B4513; text-shadow: 1px 1px #4B2E23;">Reviews for You</h1>
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <a class="btn btn-primary" href="/reviewsByMe">Your Reviews</a>
-        <a class="btn btn-secondary" href="/home">Back to Home</a>
+        <a class="btn btn-primary" href="/reviewsByMe" style="background-color: #4B2E23; border-color: #8B4513; color: #FFF; font-weight: bold;">Your Reviews</a>
+        <a class="btn btn-secondary" href="/home" style="background-color: #8B4513; border-color: #4B2E23; color: #FFF; font-weight: bold;">Back to Home</a>
     </div>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover align-middle">
-            <thead class="table-dark">
+            <thead class="table-dark" style="background-color: #4B2E23; color: #FFF;">
                 <tr>
                     <th scope="col">Review By</th>
                     <th scope="col">Review Comment</th>
@@ -18,18 +18,14 @@
             </thead>
             <tbody>
                 {{#each reviews}}
-                <tr>
+                <tr style="background-color: #F4E285; color: #4B2E23;">
                     <td>{{reviewer_name}}</td>
                     <td>{{review_text}}</td>
                     <td>{{rating}}</td>
                     <td>
                         <form method="POST" action="/report" class="d-inline">
                             <input type="hidden" name="review_id" value="{{review_num}}">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Report</button>
-                        </form>
-                        <form method="POST" action="/reviews" class="d-inline">
-                            <input type="hidden" name="review_id" value="{{review_num}}">
-                            <button type="submit" class="btn btn-outline-danger btn-sm">Report</button>
+                            <button type="submit" class="btn btn-outline-danger btn-sm" style="border-color: #8B4513; color: #B22222;">Report</button>
                         </form>
                     </td>
                 </tr>
@@ -39,8 +35,8 @@
     </div>
 
     {{#if reviews.length}}
-    <p class="text-muted text-end mt-3">Total reviews: {{reviews.length}}</p>
+    <p class="text-muted text-end mt-3" style="color: #4B2E23;">Total reviews: {{reviews.length}}</p>
     {{else}}
-    <p class="text-center text-muted mt-4">No reviews found. Start reviewing now!</p>
+    <p class="text-center text-muted mt-4" style="color: #4B2E23;">No reviews found. Start reviewing now!</p>
     {{/if}}
 </div>
