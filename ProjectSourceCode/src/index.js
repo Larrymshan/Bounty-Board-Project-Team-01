@@ -500,7 +500,7 @@ app.get('/CreateBounty', (req, res) => {
 
 });
 
-app.post('/CreateBounty', (req, res) => {
+app.post('/CreateBounty', async (req, res) => {
   if (!req.session.user) {
     console.log('User not logged in to submit a review');
     return res.redirect('/login');
@@ -510,6 +510,11 @@ app.post('/CreateBounty', (req, res) => {
   const poster = req.session.user.username;
 
   console.log(req.body); 
+  //balance update
+  const account = await db.one('SELECT * FROM Accounts WHERE userid = $1', [req.session.user.userid]);
+  const bal1 = parseInt(account.balance, 10);
+  const bal = bal1 - parseInt(price, 10);
+  db.none('UPDATE Accounts SET balance = $1 WHERE userid = $2', [bal, req.session.user.userid]);
 
   const query = `INSERT INTO Bounty (title, job_description, price, poster) VALUES ($1, $2, $3, $4)`;
   
