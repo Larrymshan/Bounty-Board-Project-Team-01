@@ -19,48 +19,12 @@ Team Members:
   CSS. We are running our server using nodeJS with the framework express in node. Our backend 
   database include PostgresSQL. We have chose to web host our website using render.
 
-  The directory structure is as follows;
-  root directory
 
-  ├─<ProjectRepository>/
-  ├─ TeamMeetingLogs
-  ├─ MilestoneSubmissions
-  ├─ ProjectSourceCode
-  ├─ Readme.md
+In ou directory ProjectSourceCode has all of the projects code including front end code,
+server code, database structure and postgreSQL query this also includes styling rules
+and images used in the website. Everything outside of project source code is not required
+to make the website run.
 
-ProjectSourceCode has all of the projects code including front end code,
-server code, database structure and postgreSQL quires this also include styling rules
-and images used in the website
-
-├─ ProjectSourceCode
-  ├─ docker-compose.yaml
-  ├─ .gitignore
-  ├─ node_modules
-  ├─ package.json
-  ├─ src
-    ├─ views
-      ├─ pages
-        ├─ home.hbs
-        ├─ login.hbs
-        ├─ register.hbs
-      ├─ partials
-        ├─ header.hbs
-        ├─ footer.hbs
-      ├─ layouts
-      ├─ main.hbs
-|    ├─ resources
-      ├─ css
-        ├─ style.css
-      ├─ js
-        ├─ script.js
-      ├─ img
-        ├─ home.png
-      ├─ index.js
-      ├─ init_data
-        ├─ create.sql
-        ├─ insert.sql
-    ├─ test
-      ├─ server.spec.js
 
 To run our project using our remote deployment system render click the link below
 https://bounty-board-project-team-01.onrender.com
