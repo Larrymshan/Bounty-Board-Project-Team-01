@@ -20,7 +20,7 @@ Team Members:
   database include PostgresSQL. We have chose to web host our website using render.
 
 
-In ou directory ProjectSourceCode has all of the projects code including front end code,
+In our directory ProjectSourceCode has all of the projects code including front end code,
 server code, database structure and postgreSQL query this also includes styling rules
 and images used in the website. Everything outside of project source code is not required
 to make the website run.
