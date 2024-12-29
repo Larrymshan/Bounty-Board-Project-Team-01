@@ -1,0 +1,33 @@
+Monday October 28: No Decisions made, no alternative actions discussed, follow-up actions implemented.
+
+Monday November 04:
+- Team members discussed future roles they will take on for the next week of the project and are now on the project board.
+- Decisions were made about how the team will use the project board to show status of project. This included a separate section on the project board called over arching tasks that will be used to keep members organized. Tasks will be taken out of over arching tasks and moved to the project board where the subtasks are displayed.
+- There are no pending tasks that need to be complete before another section of the project is able to be completed.
+- Jacob mentioned a possible issue with docker that the team will need to fix in the coming week. This doesn't pose a major issue to the overall project.
+
+Monday November 11 2024:
+- Team members noticed a place price button and were not sure what it did. Clarification was made the Alessandro is working
+on it and it will be how users post bounties to the website.
+- Trevor demonstrated the capabilities of the user review system.
+- Gracen said that going forward he will work on any miscellaneous work that needs to be completed.
+- Larry said he is going to continue working on the messaging system,
+- Trevor will work on a review reporting system to flag inappropriate reviews as well as create an admin account to moderate.
+- Alessandro is working on the system to add bounties.
+- Jacob L is working on testing programs for login and reviews. He needs clarification with the team on how to go forward with
+testing. He also noticed there was an issue with the reviews endpoint.
+- Trevor needs bounties to be able to be posted to continue the implementation of reviews so reviews can be linked to bounties.
+- There are no other pending tasks that other team members need complete.
+
+Monday November 18 2024:
+Jacob L had an issue pushing to git hub this week due to merge conflicts. However, he was able to correct this and his
+code is now working on the main branch on the git hub repo. Jacob L was working on profile page functionality. Gracen is working
+on introducing ads to the website. Larry is working on a messaging system. Trevor is working on Reviews page reporting reviews.
+Team is waiting on a payment systems to be implemented.
+Plan for the next week
+Gracen: Still working on introducing ads.
+Trevor: Reporting system needs to figure out why reviews aren't deleing.
+Jacob L: Still working on profiles pages specifically adding profile pictures.
+Larry: Still working on messaging system.
+Items group members are waiting on
+Trevor is waiting on bounty posting so he can link reviews to them.

@@ -1,0 +1,130 @@
+/* General styles */
+
+
+/* Navbar styles */
+
+body {
+  background-color: #F4E285; /* Western yellow */
+  color: #4B2E23; /* Optional: Dark brown text for contrast */
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #c19a6b !important; /* Saddle brown */
+  border-bottom: 2px solid #4b2e23; /* Dark brown */
+}
+
+.navbar-brand {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  color: #4b2e23; /* Dark brown */
+  font-weight: bold;
+}
+
+.navbar-nav .nav-link {
+  color: #fff; /* White text */
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #ffd700; /* Gold on hover */
+}
+
+.navbar .btn {
+  background-color: #4b2e23; /* Dark brown button */
+  color: #fff; /* White text */
+  border: none;
+  font-weight: bold;
+}
+
+.navbar .btn:hover {
+  background-color: #ffd700; /* Gold on hover */
+  color: #4b2e23; /* Dark brown text */
+}
+
+/* Buttons */
+button, .btn {
+  font-family: 'Playfair Display', serif;
+  border-radius: 5px;
+  padding: 10px 20px;
+  text-transform: uppercase;
+  border: 2px solid #4b2e23;
+}
+
+button:hover {
+  background-color: #4b2e23;
+  color: #ffd700;
+}
+
+/* Links */
+a {
+  color: #8b4513; /* Saddle brown */
+  text-decoration: none;
+}
+
+a:hover {
+  color: #ffd700; /* Gold */
+  text-decoration: underline;
+}
+
+/* Search Bar */
+.search-bar input[type="search"] {
+  width: 200px;
+  padding: 10px;
+  border: 2px solid #4b2e23;
+  border-radius: 5px;
+  background-color: #f4f1e9; /* Matching the body background */
+}
+
+.search-bar button {
+  padding: 10px;
+  background-color: #4b2e23;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+}
+
+.search-bar button:hover {
+  background-color: #ffd700;
+  color: #4b2e23;
+}
+
+/* Footer */
+footer {
+  background-color: #4b2e23; /* Dark brown */
+  color: #fff; /* White text */
+  text-align: center;
+  padding: 10px 0;
+  border-top: 2px solid #8b4513; /* Saddle brown */
+  font-family: 'Georgia', serif;
+}
+
+/* Western Font for Headers */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  color: #8b4513; /* Saddle brown */
+  text-transform: uppercase;
+  text-shadow: 2px 2px #4b2e23; /* Subtle shadow for western look */
+}
+
+/* Custom List Style */
+ul {
+  list-style-type: square;
+  padding-left: 20px;
+  color: #4b2e23;
+}
+
+ul li {
+  margin-bottom: 5px;
+}
+
+/* Add spacing and decoration */
+.container {
+  padding: 20px;
+  border: 3px solid #8b4513;
+  background-color: rgba(244, 241, 233, 0.9); /* Semi-transparent for effect */
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3);
+}

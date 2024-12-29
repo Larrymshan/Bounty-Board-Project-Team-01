@@ -1,0 +1,29 @@
+<form method="POST" action="/writeReview" style="background-color: rgba(244, 241, 233, 0.95); padding: 20px; border: 3px solid #8B4513; border-radius: 10px; box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.4); width: 100%; max-width: 600px; margin: auto; margin-top: 30px;">
+  <div class="mb-3">
+    <label for="username" class="form-label" style="color: #8B4513; font-weight: bold; text-transform: uppercase;">Who would you like to review?</label>
+    <input type="text" class="form-control" id="username" name="username" required style="border: 2px solid #4B2E23; background-color: #F9F5E3; color: #4B2E23; font-weight: bold;">
+  </div>
+
+  <div class="mb-3">
+    <label for="rating" class="form-label" style="color: #8B4513; font-weight: bold; text-transform: uppercase;">Please choose a rating</label>
+    <select id="number" name="rating" class="form-select" required style="border: 2px solid #4B2E23; background-color: #F9F5E3; color: #4B2E23; font-weight: bold;">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="review_text" class="form-label" style="color: #8B4513; font-weight: bold; text-transform: uppercase;">Please type review here</label>
+    <textarea class="form-control" id="review_text" name="review_text" rows="4" required style="border: 2px solid #4B2E23; background-color: #F9F5E3; color: #4B2E23; font-weight: bold;"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100" style="background-color: #4B2E23; border-color: #8B4513; color: #FFF; font-weight: bold; text-transform: uppercase;">Submit Review</button>
+</form>

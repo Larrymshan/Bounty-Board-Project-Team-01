@@ -1,0 +1,149 @@
+<header>
+
+  {{#if user}}
+    {{> nav }} <!-- Display the navigation bar only if the user is logged in -->
+    {{else}}
+    <span class="navbar-text">
+    </span>
+  {{/if}}
+
+
+
+<!-- Pop-Up Structure -->
+<div id="messagePopup" class="popup hidden">
+  <div class="popup-header">
+    <h2>Write a Message</h2>
+    <button id="closeMessageFormButton" class="close-btn">X</button>
+  </div>
+  <form id="writeMessageForm">
+    <div class="form-field">
+      <label for="receiver">To (Receiver's Username):</label>
+      <input type="text" id="receiver" name="receiver" required maxlength="50">
+    </div>
+    <div class="form-field">
+      <label for="title">Title: (Max 50 characters)</label>
+      <input type="text" id="title" name="title" required maxlength="50">
+    </div>
+    <div class="form-field">
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" required maxlength="500"></textarea>
+    </div>
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<style>
+  .hidden {
+    display: none;
+  }
+
+  .popup {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 10000;
+    width: 300px;
+    border-radius: 5px;
+  }
+
+  .popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .popup-header h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    color: #555;
+  }
+</style>
+
+
+  <!-- Include JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const openModalButton = document.getElementById('openNewPostButton');
+      const postPriceFormContainer = document.getElementById('postPriceFormContainer');
+      const closePostFormButton = document.getElementById('closePostFormButton');
+
+      if (openModalButton && postPriceFormContainer && closePostFormButton) {
+        openModalButton.addEventListener('click', function () {
+          postPriceFormContainer.style.display = 'block'; // Show the form
+        });
+
+        closePostFormButton.addEventListener('click', function () {
+          postPriceFormContainer.style.display = 'none'; // Hide the form
+        });
+      } else {
+        console.error('Button or form container not found.');
+      }
+    });
+  </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const openPopupButton = document.getElementById("writeMessageButton");
+      const closePopupButton = document.getElementById("closeMessageFormButton");
+      const messagePopup = document.getElementById("messagePopup");
+      const writeMessageForm = document.getElementById("writeMessageForm");
+
+      if (openPopupButton && closePopupButton && messagePopup) {
+        openPopupButton.addEventListener("click", () => {
+          messagePopup.classList.remove("hidden");
+        });
+
+        closePopupButton.addEventListener("click", () => {
+          messagePopup.classList.add("hidden");
+        });
+
+        writeMessageForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const receiver_name = document.getElementById("receiver").value;
+          const title = document.getElementById("title").value;
+          const message = document.getElementById("message").value;
+
+        try {
+              const response = await fetch("/writeMessage", {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ receiver_name, title, message_text: message }),
+            });
+
+            if (response.ok) {
+             alert("Message sent successfully!");
+                writeMessageForm.reset();
+              messagePopup.classList.add("hidden"); // Close the modal
+            } else {
+              const error = await response.json();
+              alert(`Error: ${error.error || "Something went wrong"}`);
+            }
+          } catch (err) {
+            console.error("Error submitting message:", err);
+            alert("An unexpected error occurred. Please try again.");
+          }
+
+        });
+      } else {
+        console.error("Message form elements not found.");
+      }
+    });
+  </script>
+
+
+</header>
