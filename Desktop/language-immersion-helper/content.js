@@ -131,6 +131,9 @@ async function checkForLocalizedVersions(languages) {
 // Process the page and add translations
 function processPage(availableLanguages) {
   // Get all text nodes that are not in script or style tags
+
+
+
   const textNodes = [];
   const walker = document.createTreeWalker(
     document.body,
@@ -142,6 +145,12 @@ function processPage(availableLanguages) {
             node.parentElement.tagName === 'SCRIPT' || 
             node.parentElement.tagName === 'STYLE' || 
             node.parentElement.tagName === 'NOSCRIPT' ||
+            node.parentElement.tagName === 'A' ||
+            node.parentElement.tagName === 'BUTTON' ||
+            node.parentElement.tagName === 'INPUT' ||
+            node.parentElement.tagName === 'CODE' ||
+            node.parentElement.tagName === 'PRE' ||
+            node.parentElement.closest('a') ||
             node.parentElement.classList.contains('translated-word') ||
             node.parentElement.classList.contains('translation-popup')) {
           return NodeFilter.FILTER_REJECT;
